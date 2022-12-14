@@ -71,18 +71,18 @@ def main_download_synonyms(project, vocab_folder_name, save_parent_folder=base_v
     project TODOC
     '''
     vocab_folder = save_parent_folder + vocab_folder_name + '/'
-    dump_folder = save_parent_folder + 'dumps/'
+    dump_folder = vocab_folder + 'dumps/'
     page_file = dump_folder + f'{project}wiki-latest-page.sql.gz'
     redirect_file = dump_folder + f'{project}wiki-latest-redirect.sql.gz'
 
-    extent_list = dump_folder.replace(save_parent_folder, '').split('/')
-    folder_to_create = save_parent_folder
+    extent_list = dump_folder.split('/')
+    folder_to_create = ''
     for new_folder in extent_list :
         folder_to_create += new_folder + '/'
         if not os.path.exists(folder_to_create) :
             os.mkdir(folder_to_create)
 
-    meta_folder = save_parent_folder + 'meta/'
+    meta_folder = vocab_folder + 'meta/'
     if not os.path.exists(meta_folder) :
         os.mkdir(meta_folder)
     id2title_file = meta_folder + 'id2title.json'

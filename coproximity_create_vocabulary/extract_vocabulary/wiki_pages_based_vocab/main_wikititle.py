@@ -13,7 +13,9 @@ from coproximity_create_vocabulary.data_conf import base_vocab_folder
 
 
 default_whole_folder = base_vocab_folder + '/whole/vocabulary/wiki_title_fr/'
-def main_wikititle(n_best_taken, use_id_to_title=False, overwrite=False, additional_folder_name = '', print_progress_info=False, whole_folder :str = default_whole_folder ) :
+def main_wikititle(
+    n_best_taken, use_id_to_title=False, overwrite=False, additional_folder_name = '', print_progress_info=False, whole_folder :str = default_whole_folder
+) :
     '''
     n_best_taken: size of the vocabulary to create
     use_id_to_title: if true consider that the wikipedia title csv is made of the wikipedia id and give a id2title_file to create_processed_title
@@ -93,8 +95,8 @@ def main_wikititle(n_best_taken, use_id_to_title=False, overwrite=False, additio
                 is_printing_progress=print_progress_info,
             )
 
-
-def main_wiki_fr_create_smaller_multi_synonyms_text_file() :
+default_wiki_title_fr_folder : str = base_vocab_folder + '/whole/vocabulary/wiki_title_fr/'
+def main_wiki_fr_create_smaller_multi_synonyms_text_file(wiki_title_fr_folder=default_wiki_title_fr_folder) :
     '''
     Create a dict which, for the vocabulary folder which have the most synonyms which redirect to multiple titles (i.e. all lower and no accent),
     for all titles which have a at least one synonym which redirect to multiple titles, we get their text description (used for giving them a doc2vec vector with the fasttext)
@@ -106,7 +108,6 @@ def main_wiki_fr_create_smaller_multi_synonyms_text_file() :
     n_best_taken = 200000
     new_str = f"{'_lower' if use_lower_processed else ''}{'_no_accent' if use_no_accent_processed else ''}"
             
-    wiki_title_fr_folder :str = base_vocab_folder + '/whole/vocabulary/wiki_title_fr/'
     vocab_folder = wiki_title_fr_folder+'ngram_title_wiki/wiki_title_%s%s/'%('whole' if n_best_taken is None else 'best_%d'%n_best_taken, new_str)
     meta_folder = wiki_title_fr_folder + 'meta/'
 

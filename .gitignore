@@ -2,3 +2,6 @@
 **/.ipynb_checkpoints
 **/for_ogier_doc2doc/
 **/TODOC.txt
+
+coproximity_create_vocabulary/data_conf.py
+coproximity_create_vocabulary.egg-info/

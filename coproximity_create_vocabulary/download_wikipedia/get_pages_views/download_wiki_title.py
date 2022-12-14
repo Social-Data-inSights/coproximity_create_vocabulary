@@ -50,16 +50,17 @@ class download_and_save_factory :
     '''
     class used to download and save the pageviews by month
     '''
-    def __init__ (self, base_url, dump_folder, count_folder, project) :
+    def __init__ (self, base_url, dump_folder, count_folder, project, set_allowed_projects) :
         '''
         base_url : base of the url from which the SQL dumps will be saved
         dump_folder : folder in which the results will be saved
-        project: TODOC
+        project, set_allowed_projects: TODOC
         '''
         self.base_url = base_url
         self.dump_folder = dump_folder
         self.count_folder = count_folder
         self.project = project
+        self.set_allowed_projects = set_allowed_projects
         
     def download_and_save (self, it_year_month ) :
         '''
@@ -78,16 +79,58 @@ class download_and_save_factory :
             return
         
         save_filename = self.dump_folder + dump_name
-        if os.path.exists(save_filename) :
+        reduced_save_filename = save_filename.replace('.bz2', '_reduce.bz2')
+        if os.path.exists(save_filename) or os.path.exists(reduced_save_filename) :
             print(dump_name, 'already done')
-            return
-       
-        suffix_url = '%d/%d-%02d/' % (it_year, it_year, it_month,) + dump_name
-        download_page(save_filename, url = self.base_url + suffix_url)
-        print(dump_name, 'done')
+        else :
+            suffix_url = '%d/%d-%02d/' % (it_year, it_year, it_month,) + dump_name
+            download_page(save_filename, url = self.base_url + suffix_url)
+            print(dump_name, 'done')
 
-        count_title_id(save_filename, self.count_folder, self.project, )
-        os.remove(save_filename)
+        reduce_size_dump(save_filename, reduced_save_filename, self.set_allowed_projects)
+        count_title_id(reduced_save_filename, self.count_folder, self.project, )
+
+def reduce_size_dump(save_filename, reduced_save_filename, set_allowed_projects) :
+    '''
+    TODOC
+    '''
+    if os.path.exists(reduced_save_filename) :
+        return
+    already_project = set()
+    count_project = None
+
+    counter = Counter()
+
+
+    with bz2.open( save_filename) as f_in  :
+        with bz2.open( reduced_save_filename, 'w') as f_out  :
+            for line in f_in :
+                line = line.strip().split(b' ')
+                project_type = line[0].split(b'.')
+                if len(line) == 6 and len(project_type) == 2 and project_type[0] and project_type[1] == b'wikipedia' and line[2] != b'null':
+                    project, typ = project_type
+                    
+                    if count_project != project :
+                        assert not project in already_project
+                        if counter :
+                            f_out.write(b'\n'.join(
+                                b'%b %b %b %i'%(count_project, title, id_, count) 
+                                for (title, id_), count in counter.items() )
+                            )
+
+                        already_project.add(project)
+                        counter = Counter()
+                        count_project = project
+                        
+                    if project in set_allowed_projects :
+                        counter[(line[1], line[2])] += int(line[4])
+                        
+            if counter:
+                f_out.write(b'\n'.join(
+                    b'%b %b %b %i'%(count_project, id_, title, count) 
+                    for (id_, title), count in counter.items() )
+                )
+
 
 def count_title_id(save_file, count_folder, project) :
     '''
@@ -106,14 +149,18 @@ def count_title_id(save_file, count_folder, project) :
     #pageviews are SQL dumps, but it is faster to directly parse it by reading which values were supposed to be inserted.
     id_count = Counter()
     title_count = Counter()
-    string_byte = f'{project}.wikipedia'.encode('utf8')
+    string_byte = project.encode('utf8')
     with bz2.open( save_file) as f  :
         for line in f :
-            if line.startswith(string_byte) :
+            if line.strip() and line.startswith(string_byte) :
                 line = line.decode('utf-8').strip().split(' ')
-                if len(line) == 6 :
-                    title_count[line[1]] += int(line[4])
-                    id_count[line[2]] += int(line[4])
+
+                if len(line) == 4 :
+                    project, id_, title, count = line
+                    title_count[title] += int(count)
+                    id_count[id_] += int(count)
+                else :
+                    print('reduced count line != 4', line)
                 
     with open(id_count_save_file, 'w', encoding='utf8') as f :
         json.dump(dict(id_count), f)
@@ -182,18 +229,19 @@ def get_title_count_sorted(sorted_view_file, dump_folder, begin_month, id2title_
         for word, count in sorted(mean_word.items(), key = lambda x : x[1], reverse=True) :
             writer.writerow((word, count))
 
-def main_download_wiki_title(project, vocab_folder_name, begin_month = None, use_multiprocessing = True, save_parent_folder=base_vocab_folder) :
+default_set_allowed_projects = {b'fr' , b'en', b'it', b'de'}
+def main_download_wiki_title(project, vocab_folder_name, set_allowed_projects=default_set_allowed_projects, begin_month = None, use_multiprocessing = True, save_parent_folder=base_vocab_folder) :
     '''
     Download the pageviews by article
 
-    TODOC project vocab_folder_name
+    TODOC project vocab_folder_name set_allowed_projects
     begin_month: month (as formatted in iter_month) from which to start to get the pageviews
     use_multiprocessing: if True use multiprocessing
     '''
     count_folder = save_parent_folder + vocab_folder_name + '/count_dump/'
 
-    extent_list = count_folder.replace(save_parent_folder, '').split('/')
-    folder_to_create = save_parent_folder
+    extent_list = count_folder.split('/')
+    folder_to_create = ''
     for new_folder in extent_list :
         folder_to_create += new_folder + '/'
         if not os.path.exists(folder_to_create) :
@@ -209,7 +257,7 @@ def main_download_wiki_title(project, vocab_folder_name, begin_month = None, use
     synonyms_file = meta_folder + 'synonyms.csv'
 
     base_url = 'https://dumps.wikimedia.org/other/pageview_complete/monthly/'
-    downloader_and_saver = download_and_save_factory(base_url, dump_folder, count_folder, project)
+    downloader_and_saver = download_and_save_factory(base_url, dump_folder, count_folder, project, set_allowed_projects)
     
     if use_multiprocessing :
         with Pool(3) as p:
