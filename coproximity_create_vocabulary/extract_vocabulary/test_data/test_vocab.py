@@ -25,11 +25,9 @@ for i in range(-4,0) :
     if not os.path.exists(folder) :
         os.mkdir(folder)
 
-token2text_file = None
 translate_token2text_id = None
 
-_ , _, _, _, _, _, spacy_model = get_french_var()
-disable_tag=['tagger', 'parser', 'ner']
+_ , _, _, _, _, _, spacy_model, disable_tag = get_french_var()
 n_best_taken = 1000
 delimiter = 'a'
 quotechar = '"'
@@ -48,7 +46,7 @@ for extension, list_select_article, list_select_synonyms in [
     
     for use_lower_processed in [False, True] :
         for use_no_accent_processed in [False, True] :
-            stop_words , duplicate_stop_words, processed_method, synonym_to_ignore, word_to_add, synonym_to_add, spacy_model = \
+            stop_words , duplicate_stop_words, processed_method, synonym_to_ignore, word_to_add, synonym_to_add, spacy_model, _ = \
                 get_french_var(use_lower_processed=use_lower_processed, use_no_accent_processed=use_no_accent_processed)
 
             new_str = f"{'_lower' if use_lower_processed else ''}{'_no_accent' if use_no_accent_processed else ''}"
@@ -76,7 +74,7 @@ for extension, list_select_article, list_select_synonyms in [
                 whole_folder + 'cc.fr.300.bin',
                 'fr',
                 apply_rewikititle_on_lem= not use_lower_processed,
-                token2text_file=token2text_file, translate_token2text_id=translate_token2text_id,
+                func_get_title_factory=translate_token2text_id,
                 use_id_to_title=False,
                 overwrite=True,
                 is_printing_progress=False,

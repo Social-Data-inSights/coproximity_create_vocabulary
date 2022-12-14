@@ -11,7 +11,7 @@ from coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.wor
 from coproximity_create_vocabulary.data_conf import base_vocab_folder
 import os
 
-categories_folder = base_vocab_folder + 'whole/vocabulary/wiki_title_fr/categories/'
+categories_folder = base_vocab_folder + 'whole/vocabulary/french/categories/'
 
 split_path = categories_folder.split('/')
 for i in [ -3, -2, -1, len(split_path)] :

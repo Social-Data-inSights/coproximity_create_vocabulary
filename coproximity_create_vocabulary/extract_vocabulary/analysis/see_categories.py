@@ -5,7 +5,7 @@ Get the categories of a Wikipedia article
 import json, sys
 from coproximity_create_vocabulary.data_conf import base_vocab_folder
 
-categories_folder = base_vocab_folder + 'whole/vocabulary/wiki_title_fr/categories/'
+categories_folder = base_vocab_folder + 'whole/vocabulary/french/categories/'
 
 def get_title(title, black_list_file = None) :
     '''

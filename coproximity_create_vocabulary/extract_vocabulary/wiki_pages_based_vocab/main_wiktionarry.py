@@ -19,11 +19,10 @@ def main_wikititle_wiktionary(n_best_taken, use_id_to_title=True, overwrite=Fals
     additional_folder_name: suffix to add to a folder to change its name, to use to change the name of a vocabulary folder
     print_progress_info:  print the progress of the vocabulary creation, in a stereotyped behavior. Used in electron front to get the progress of the process.
     '''
-    stop_words , duplicate_stop_words, processed_method, synonym_to_ignore, word_to_add, synonym_to_add, spacy_model  = get_french_var()
-    disable_tag=['tagger', 'parser', 'ner']
+    stop_words , duplicate_stop_words, processed_method, synonym_to_ignore, word_to_add, synonym_to_add, spacy_model, disable_tag = get_french_var()
 
     data_folder = base_vocab_folder + '/'
-    vocab_parent_folder = data_folder + 'whole/vocabulary/wiki_title_fr/ngram_title_wiki/'
+    vocab_parent_folder = data_folder + 'whole/vocabulary/french/ngram_title_wiki/'
     article_list_file=  data_folder + 'wikipedia/sorted_view_wiki_over_years.csv'
     processed_article_file = get_processed_file(article_list_file, spacy_model, disable_tag, 'csv')
     whole_folder :str = data_folder + 'wikipedia/whole/'

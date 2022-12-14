@@ -67,26 +67,27 @@ def main_wikititle_del_book_music_films (
     use_lower_processed: if true, the processing sets the result as lowercase
     use_no_accent_processed: if true, the processing deletes the accents
     '''
-    categories_folder = base_vocab_folder + 'whole/vocabulary/wiki_title_fr/categories/'
+    categories_folder = base_vocab_folder + 'whole/vocabulary/french/categories/'
     wiki_title2categories_file = categories_folder + 'title2categories.json'
     black_list_category_file = categories_folder + 'all_trimmed_flatten_set_categories.json'
 
-    whole_folder :str = base_vocab_folder + '/whole/vocabulary/wiki_title_fr/'
-    vocab_parent_folder = base_vocab_folder + '/whole/vocabulary/wiki_title_fr/ngram_title_wiki/'
+    whole_folder :str = base_vocab_folder + '/whole/vocabulary/french/'
+    vocab_parent_folder = base_vocab_folder + '/whole/vocabulary/french/ngram_title_wiki/'
     
-    _ , _, _, _, _, _, spacy_model = get_french_var()
-    disable_tag=['tagger', 'parser', 'ner']
+    _ , _, _, _, _, _, spacy_model, disable_tag = get_french_var()
 
     article_list_file=  whole_folder + 'meta/sorted_view_wiki_over_years.csv'
     processed_article_file = get_processed_file(article_list_file, spacy_model, disable_tag, 'csv')
     synonyms_file = whole_folder + 'meta/synonyms.csv'
     processed_syn_file = get_processed_file(synonyms_file, spacy_model, disable_tag, 'csv')
 
-    token2text_file = base_vocab_folder + '/wikipedia/best_avg_250.000.json'
-    translate_token2text_id = create_translate_title2text_id_factory(base_vocab_folder + '/wikipedia/whole/meta_wiki/title_to_id.json')
+    translate_token2text_id = create_translate_title2text_id_factory(
+        base_vocab_folder + '/wikipedia/whole/meta_wiki/title_to_id.json',
+        base_vocab_folder + '/wikipedia/best_avg_250.000.json'
+    )
 
 
-    stop_words , duplicate_stop_words, processed_method, synonym_to_ignore, word_to_add, synonym_to_add, spacy_model = \
+    stop_words , duplicate_stop_words, processed_method, synonym_to_ignore, word_to_add, synonym_to_add, spacy_model, _ = \
         get_french_var(use_lower_processed=use_lower_processed, use_no_accent_processed=use_no_accent_processed)
 
     new_str = f"{'_lower' if use_lower_processed else ''}{'_no_accent' if use_no_accent_processed else ''}"
@@ -117,7 +118,7 @@ def main_wikititle_del_book_music_films (
         whole_folder + 'cc.fr.300.bin',
         'fr',
         apply_rewikititle_on_lem= not use_lower_processed,
-        token2text_file=token2text_file, translate_token2text_id=translate_token2text_id,
+        func_get_title_factory=translate_token2text_id,
         use_id_to_title=use_id_to_title,
         overwrite=overwrite,
         is_printing_progress=print_progress_info,

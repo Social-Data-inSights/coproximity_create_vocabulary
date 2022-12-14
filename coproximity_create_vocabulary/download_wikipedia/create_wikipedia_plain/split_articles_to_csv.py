@@ -42,11 +42,16 @@ def preprocess_wiki_text (wikitext , threshold_skip_little) :
 
 def get_check_only (get_only_ids, get_only_title, id_, title) :
     if get_only_ids :
-        if not id_ in get_only_ids :
-            return False
-    return not get_only_title or title in get_only_title
+        if id_ in get_only_ids :
+            get_only_ids.remove(id_)
+            return True, get_only_ids, get_only_title, not bool(get_only_ids)
+    if get_only_title :
+        if title in get_only_title:
+            get_only_title.remove(title)
+            return True, get_only_ids, get_only_title, not bool(get_only_title)
+    return False, get_only_ids, get_only_title, False
 
-def split_articles_to_csv (whole_dir, from_xml_bz2 , dump_save_to, threshold_skip_little = 100, what_to_do_result = 'save', get_only_ids = None, get_only_title = None) :
+def split_articles_to_csv (whole_dir, from_xml_bz2 , dump_save_to, threshold_skip_little = 100, what_to_do_result = 'save', get_only_ids = None, get_only_title = None, is_printing=True) :
     """
     Take the file path {from_xml_bz2} to the bz2 compressed Wikipedia dump and creates a csv of the plain text of the articles.
 
@@ -56,7 +61,7 @@ def split_articles_to_csv (whole_dir, from_xml_bz2 , dump_save_to, threshold_ski
     threshold_skip_little: minimum number of words under which an article is discarded from the csv
     what_to_do_result: TODOC
     get_only_title get_only_ids TODOC
-
+    is_printing TODOC
     """
     assert what_to_do_result in {'save', 'return_dict_id', 'return_dict_title'}
 
@@ -104,7 +109,7 @@ def split_articles_to_csv (whole_dir, from_xml_bz2 , dump_save_to, threshold_ski
 
     # if the dump was already started, load the ids of all the already parsed articles (to skip them)
     set_id_already = set()
-    if os.path.exists(dump_save_to) and what_to_do_result == 'save':
+    if dump_save_to and os.path.exists(dump_save_to) and what_to_do_result == 'save':
         with open(dump_save_to ,encoding='utf8' , newline='', errors = 'replace' ) as old_csv :
             reader = csv.reader(old_csv, delimiter='|', quotechar='"', quoting=csv.QUOTE_MINIMAL ,)
             for art_id , _ in reader :
@@ -124,7 +129,7 @@ def split_articles_to_csv (whole_dir, from_xml_bz2 , dump_save_to, threshold_ski
                 #change state if we enter a page
                 if '<page>' in line :
                     #print some time to see how well the program is going.
-                    if counter % 10000 == 0 :
+                    if counter % 10000 == 0 and is_printing:
                         print(counter , time.ctime())
                         
                     counter += 1
@@ -162,7 +167,7 @@ def split_articles_to_csv (whole_dir, from_xml_bz2 , dump_save_to, threshold_ski
                             if redirect_to :
                                 is_redirect = True
                                 redirect_to = redirect_to[0]
-                            else :
+                            elif is_printing :
                                 print('failed redirect',line)
 
                     else :
@@ -183,7 +188,9 @@ def split_articles_to_csv (whole_dir, from_xml_bz2 , dump_save_to, threshold_ski
                             skipped.append(page_id)
                     #otherwise save the result of the article
                     else :
-                        if not page_id in set_id_already and not get_check_only(get_only_ids, get_only_title, page_id, page_title):
+                        add_current, get_only_ids, get_only_title, has_ended = get_check_only(get_only_ids, get_only_title, page_id, page_title)
+                        if not page_id in set_id_already and add_current:
+
                             plain , skip_little = preprocess_wiki_text(page_content, threshold_skip_little)
                             if skip_little :
                                 if what_to_do_result == 'save' :
@@ -195,7 +202,9 @@ def split_articles_to_csv (whole_dir, from_xml_bz2 , dump_save_to, threshold_ski
                                 elif what_to_do_result == 'return_dict_id' :
                                     to_return[page_id] = plain
                                 elif what_to_do_result == 'return_dict_title' :
-                                    to_return[page_title] = plain                           
+                                    to_return[page_title] = plain
+                        if has_ended:
+                            break                      
 
                     # either way save the id and article
                     title_to_id [page_title] = page_id
@@ -222,7 +231,9 @@ def split_articles_to_csv (whole_dir, from_xml_bz2 , dump_save_to, threshold_ski
                 if '</page>' in line :
                     state = OUT_ARTICLE
 
-                    if not page_id in set_id_already and get_check_only(get_only_ids, get_only_title, page_id, page_title):
+                    add_current, get_only_ids, get_only_title, has_ended = get_check_only(get_only_ids, get_only_title, page_id, page_title)
+                    if not page_id in set_id_already and add_current:
+
                         plain , skip_little = preprocess_wiki_text(page_content, threshold_skip_little)
                         if skip_little :
                             if what_to_do_result == 'save' :
@@ -238,6 +249,9 @@ def split_articles_to_csv (whole_dir, from_xml_bz2 , dump_save_to, threshold_ski
 
                     if what_to_do_result == 'save' :
                         title_to_id [page_title] = page_id
+
+                    if has_ended:
+                        break
 
                     page_id = ''
                     page_title = ''

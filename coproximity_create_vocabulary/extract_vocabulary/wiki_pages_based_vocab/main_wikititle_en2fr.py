@@ -58,34 +58,33 @@ def get_translate_from_dump(from_, to_, save_file, translate_folder, from_id2tit
 
 n_best_taken = int(1e5)
 
-_ , _, _, _, _, _, spacy_model = get_english_var()
-disable_tag=['parser', 'ner']
+_ , _, _, _, _, _, spacy_model, disable_tag = get_english_var()
 
 whole_vocab_folder = base_vocab_folder + 'whole/vocabulary/'
-whole_folder :str = base_vocab_folder + '/whole/vocabulary/wiki_title_en/'
+whole_folder :str = base_vocab_folder + '/whole/vocabulary/english/'
 translate_folder = whole_vocab_folder+'translate/'
-vocab_parent_folder = base_vocab_folder + '/whole/vocabulary/wiki_title_en/ngram_title_wiki/'
+vocab_parent_folder = base_vocab_folder + '/whole/vocabulary/english/ngram_title_wiki/'
 
-fr_id2title_file = whole_vocab_folder + 'wiki_title_fr/meta/id2title.json'
-en_id2title_file = whole_vocab_folder + 'wiki_title_en/meta/id2title.json'
+fr_id2title_file = whole_vocab_folder + 'french/meta/id2title.json'
+en_id2title_file = whole_vocab_folder + 'english/meta/id2title.json'
 
-vocab_folder = whole_vocab_folder+'wiki_title_en/ngram_title_wiki/wiki_title_fr_in_en_%s/'%('whole' if n_best_taken is None else 'best_%d'%n_best_taken)
+vocab_folder = whole_vocab_folder+'english/ngram_title_wiki/wiki_title_fr_in_en_%s/'%('whole' if n_best_taken is None else 'best_%d'%n_best_taken)
 
 synonyms_file = whole_folder + 'meta/synonyms.csv'
 processed_syn_file = get_processed_file(synonyms_file, spacy_model, disable_tag, 'csv')
-article_list_file=  base_vocab_folder + '/whole/vocabulary/wiki_title_en/meta/sorted_view_wiki_over_years.csv'
+article_list_file=  base_vocab_folder + '/whole/vocabulary/english/meta/sorted_view_wiki_over_years.csv'
 processed_article_file = get_processed_file(article_list_file, spacy_model, disable_tag, 'csv')
 
-french_set_articles_file = base_vocab_folder + 'whole/vocabulary/wiki_title_fr/ngram_title_wiki/wiki_title_best_100000/set_tokens.json'
+french_set_articles_file = base_vocab_folder + 'whole/vocabulary/french/ngram_title_wiki/wiki_title_best_100000/set_tokens.json'
 
-wiki_title_fr_folder = whole_vocab_folder + 'wiki_title_fr/ngram_title_wiki/wiki_title_best_100000/'
-wiki_title_en_folder = whole_vocab_folder + 'wiki_title_en/ngram_title_wiki/wiki_title_best_100000/'
+wiki_title_fr_folder = whole_vocab_folder + 'french/ngram_title_wiki/wiki_title_best_100000/'
+wiki_title_en_folder = whole_vocab_folder + 'english/ngram_title_wiki/wiki_title_best_100000/'
 
 for folder in [whole_vocab_folder, translate_folder, vocab_folder] :
     if not os.path.exists(folder) :
         os.mkdir(folder)
 
-stop_words , duplicate_stop_words, processed_method, synonym_to_ignore, _, _, _ = get_english_var()
+stop_words , duplicate_stop_words, processed_method, synonym_to_ignore, _, _, _, _ = get_english_var()
 synonym_to_ignore.add(('How Fly', 'Wiz Khalifa'))
 synonym_to_ignore.add(('Grow Season', 'Wiz Khalifa'))
 synonym_to_ignore.add(('Future changes', 'Yu-Gi-Oh! GX'))
@@ -173,8 +172,10 @@ if __name__ == '__main__' :
     create_title_en2fr, post_process_en2fr = wikititle_en2fr ()
 
     processed_list_select, processed_method_list, preprocessed_apply_rewikititle_on_lem_list = get_preprocess_args(spacy_model, disable_tag=['parser', 'ner'])
-    token2text_file = base_vocab_folder + '/wikipedia/best_avg_250.000.json'
-    translate_token2text_id = create_translate_title2text_id_factory(base_vocab_folder + '/wikipedia/whole/meta_wiki/title_to_id.json')
+    translate_token2text_id = create_translate_title2text_id_factory(
+        base_vocab_folder + '/wikipedia/whole/meta_wiki/title_to_id.json',
+        base_vocab_folder + '/wikipedia/best_avg_250.000.json',
+    )
     plain_article_title_reader = auto_reader(article_list_file, csv_args = dict(delimiter=';', quotechar='"'))
     plain_synonyms_reader = auto_reader(synonyms_file, csv_args = dict(delimiter=';', quotechar='"'))
 
@@ -194,7 +195,7 @@ if __name__ == '__main__' :
         whole_folder + 'cc.en.300.bin',
         'en',
         apply_rewikititle_on_lem= not use_lower_processed,
-        token2text_file=token2text_file, translate_token2text_id=translate_token2text_id,
+        func_get_title_factory=translate_token2text_id,
         use_id_to_title=False,
         overwrite=False,
         is_printing_progress=True,

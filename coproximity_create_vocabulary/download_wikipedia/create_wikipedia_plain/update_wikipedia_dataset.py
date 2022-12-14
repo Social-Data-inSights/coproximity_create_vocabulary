@@ -45,8 +45,8 @@ def main_wikipedia_get_plain(language = 'fr', wikipedia_folder =base_data_folder
             nb_view, 
             whole_folder + 'best_avg',  
             csv_extracted_file , 
-            base_data_folder + 'whole/vocabulary/wiki_title_fr/meta/sorted_view_wiki_over_years.csv',
-            id2title_file = base_data_folder + 'whole/vocabulary/wiki_title_fr/meta/id2title.json',
+            base_data_folder + 'whole/vocabulary/french/meta/sorted_view_wiki_over_years.csv',
+            id2title_file = base_data_folder + 'whole/vocabulary/french/meta/id2title.json',
         )
 
 

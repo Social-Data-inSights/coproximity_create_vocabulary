@@ -280,7 +280,7 @@ if __name__ == '__main__' :
     expert_wiki_folder      = base_data_folder + 'wikipedia/experts/'
     expert_tfidf_wiki_folder= expert_wiki_folder + 'expert_tfidf/' 
     to_copy_idf_file        = base_data_folder + 'wikipedia/main_wiki/idfs/idf_7gram_ids.json'
-    vocab_folder       = base_data_folder + 'whole/vocabulary/wiki_title_fr/ngram_title_wiki/wiki_title_best_100000/'
+    vocab_folder       = base_data_folder + 'whole/vocabulary/french/ngram_title_wiki/wiki_title_best_100000/'
     base_expert_tfidf       = base_data_folder + 'RTS/coproximity/main_rts/tfidfs/expert_tfidf.json' 
     wiki_tfidf              = base_data_folder + 'wikipedia/main_wiki/tfidfs/simp_7gram_tfidf_ids_ln_75.json'
     keep_threshold_expert   = 75

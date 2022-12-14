@@ -123,15 +123,15 @@ if __name__ == '__main__' :
     whole_folder = base_data_folder + 'wikipedia/whole/'
     dump_file = whole_folder + f'wiki_fr_dump.xml.bz2'
     csv_extracted_file = whole_folder + f'wiki_fr_dump.csv'
-    article_list_file = base_data_folder + 'whole/vocabulary/wiki_title_fr/meta/sorted_view_wiki_over_years.csv'
-    id2title_file = base_data_folder + 'whole/vocabulary/wiki_title_fr/meta/id2title.json',
+    article_list_file = base_data_folder + 'whole/vocabulary/french/meta/sorted_view_wiki_over_years.csv'
+    id2title_file = base_data_folder + 'whole/vocabulary/french/meta/id2title.json',
     '''
 
     whole_folder = base_data_folder + 'wikipedia_en/whole/'
     dump_file = whole_folder + f'wiki_en_dump.xml.bz2'
     csv_extracted_file = whole_folder + f'wiki_en_dump.csv'
-    article_list_file = base_data_folder + 'whole/vocabulary/wiki_title_en/meta/sorted_view_wiki_over_years.csv'
-    id2title_file = base_data_folder + 'whole/vocabulary/wiki_title_en/meta/id2title.json'
+    article_list_file = base_data_folder + 'whole/vocabulary/english/meta/sorted_view_wiki_over_years.csv'
+    id2title_file = base_data_folder + 'whole/vocabulary/english/meta/id2title.json'
 
     for nb_view in [100, 250000, int(1e6)] :
         get_subset_view_from_csv(

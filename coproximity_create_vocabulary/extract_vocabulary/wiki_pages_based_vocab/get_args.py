@@ -13,6 +13,8 @@ duplicate stop words : let's say we have 2 ngrams whose only difference is that 
 import string, unicodedata
 from coproximity_create_vocabulary.extract_vocabulary.basic_method.util_vocab import get_lemmatize_text_spacy
 
+
+
 delete_accent = lambda s : ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
 def get_french_var (use_lower_processed=False, use_no_accent_processed=False) :
     '''
@@ -56,12 +58,13 @@ def get_french_var (use_lower_processed=False, use_no_accent_processed=False) :
         stop_words.add('étant')
 
     spacy_model = 'fr_core_news_lg'
-    processed_method = get_lemmatize_text_spacy(spacy_model, use_lower = use_lower_processed, use_no_accent = use_no_accent_processed)
+    disable_tag=['tagger', 'parser', 'ner']
+    processed_method = get_lemmatize_text_spacy(spacy_model, disable_tag=disable_tag, use_lower = use_lower_processed, use_no_accent = use_no_accent_processed)
 
     word_to_add = []
     synonym_to_add = {}
 
-    return stop_words , duplicate_stop_words, processed_method, synonym_to_ignore, word_to_add, synonym_to_add, spacy_model
+    return stop_words , duplicate_stop_words, processed_method, synonym_to_ignore, word_to_add, synonym_to_add, spacy_model, disable_tag
 
 def get_preprocess_args (spacy_model, disable_tag=['tagger', 'parser', 'ner']) :
     '''
@@ -101,9 +104,10 @@ def get_english_var (use_lower_processed=False, use_no_accent_processed=False) :
     duplicate_stop_words = set(duplicate_stop_words)
 
     spacy_model = 'en_core_web_lg'
-    processed_method = get_lemmatize_text_spacy(spacy_model, disable_tag=['parser', 'ner'], use_lower = use_lower_processed, use_no_accent = use_no_accent_processed)
+    disable_tag=['parser', 'ner']
+    processed_method = get_lemmatize_text_spacy(spacy_model, disable_tag=disable_tag, use_lower = use_lower_processed, use_no_accent = use_no_accent_processed)
 
-    return stop_words , duplicate_stop_words, processed_method, synonym_to_ignore, [] , {}, spacy_model
+    return stop_words , duplicate_stop_words, processed_method, synonym_to_ignore, [] , {}, spacy_model, disable_tag
 
 def get_processed_file(filepath, spacy_model, disable_tag, new_extension='csv') :
     '''
@@ -115,3 +119,8 @@ def get_processed_file(filepath, spacy_model, disable_tag, new_extension='csv') 
     to_add_to_processed = f"{spacy_model}_{''.join([tag[0] for tag in sorted(disable_tag)])}"
     *path, extension = filepath.split('.')
     return f"{'.'.join(path)}_{to_add_to_processed}.{new_extension if new_extension else extension}"
+
+var_getter_by_project = {
+    'fr': get_french_var,
+    'en': get_english_var,
+}

@@ -96,11 +96,11 @@ def reduce_size_dump(save_filename, reduced_save_filename, set_allowed_projects)
     '''
     if os.path.exists(reduced_save_filename) :
         return
+
     already_project = set()
     count_project = None
 
     counter = Counter()
-
 
     with bz2.open( save_filename) as f_in  :
         with bz2.open( reduced_save_filename, 'w') as f_out  :
@@ -130,6 +130,7 @@ def reduce_size_dump(save_filename, reduced_save_filename, set_allowed_projects)
                     b'%b %b %b %i'%(count_project, id_, title, count) 
                     for (id_, title), count in counter.items() )
                 )
+    os.remove(save_filename)
 
 
 def count_title_id(save_file, count_folder, project) :

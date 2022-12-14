@@ -17,23 +17,24 @@ def main_wikititle(n_best_taken, use_id_to_title=False, overwrite=False, additio
     n_best_taken: size of the vocabulary to create
     '''
     
-    whole_folder :str = base_vocab_folder + '/whole/vocabulary/wiki_title_en/'
-    vocab_parent_folder = base_vocab_folder + '/whole/vocabulary/wiki_title_en/ngram_title_wiki/'
+    whole_folder :str = base_vocab_folder + '/whole/vocabulary/english'
+    vocab_parent_folder = base_vocab_folder + '/whole/vocabulary/english/ngram_title_wiki/'
     
-    _ , _, _, _, _, _, spacy_model = get_english_var()
-    disable_tag=['parser', 'ner']
+    _ , _, _, _, _, _, spacy_model, disable_tag = get_english_var()
 
     article_list_file=  whole_folder + 'meta/sorted_view_wiki_over_years.csv'
     processed_article_file = get_processed_file(article_list_file, spacy_model, disable_tag, 'csv')
     synonyms_file = whole_folder + 'meta/synonyms.csv'
     processed_syn_file = get_processed_file(synonyms_file, spacy_model, disable_tag, 'csv')
 
-    token2text_file = base_vocab_folder + '/wikipedia/best_avg_250.000.json'
-    translate_token2text_id = create_translate_title2text_id_factory(base_vocab_folder + '/wikipedia/whole/meta_wiki/title_to_id.json')
+    translate_token2text_id = create_translate_title2text_id_factory(
+        base_vocab_folder + '/wikipedia/whole/meta_wiki/title_to_id.json',
+        base_vocab_folder + '/wikipedia/best_avg_250.000.json',
+    )
 
     for use_lower_processed in [False, True] :
         for use_no_accent_processed in [False, True] :
-            stop_words , duplicate_stop_words, processed_method, synonym_to_ignore, word_to_add, synonym_to_add, spacy_model = \
+            stop_words , duplicate_stop_words, processed_method, synonym_to_ignore, word_to_add, synonym_to_add, spacy_model, _ = \
                 get_english_var(use_lower_processed=use_lower_processed, use_no_accent_processed=use_no_accent_processed)
             
             new_str = f"{'_lower' if use_lower_processed else ''}{'_no_accent' if use_no_accent_processed else ''}"
@@ -61,7 +62,7 @@ def main_wikititle(n_best_taken, use_id_to_title=False, overwrite=False, additio
                 whole_folder + 'cc.en.300.bin',
                 'en',
                 apply_rewikititle_on_lem= not use_lower_processed,
-                token2text_file=token2text_file, translate_token2text_id=translate_token2text_id,
+                func_get_title_factory=translate_token2text_id,
                 use_id_to_title=use_id_to_title,
                 overwrite=overwrite,
                 is_printing_progress=print_progress_info,
@@ -98,14 +99,16 @@ def main_wiki_en_create_smaller_multi_synonyms_text_file() :
     n_best_taken = 200000
     new_str = f"{'_lower' if use_lower_processed else ''}{'_no_accent' if use_no_accent_processed else ''}"
             
-    wiki_title_en_folder :str = base_vocab_folder + '/whole/vocabulary/wiki_title_en/'
+    wiki_title_en_folder :str = base_vocab_folder + '/whole/vocabulary/english'
     vocab_folder = wiki_title_en_folder+'ngram_title_wiki/wiki_title_%s%s/'%('whole' if n_best_taken is None else 'best_%d'%n_best_taken, new_str)
     meta_folder = wiki_title_en_folder + 'meta/'
 
-    token2text_file = base_vocab_folder + '/wikipedia/best_avg_250.000.json'
-    translate_token2text_id = create_translate_title2text_id_factory(base_vocab_folder + '/wikipedia/whole/meta_wiki/title_to_id.json')
+    translate_token2text_id = create_translate_title2text_id_factory(
+        base_vocab_folder + '/wikipedia/whole/meta_wiki/title_to_id.json',
+        base_vocab_folder + '/wikipedia/best_avg_250.000.json',
+    )
 
-    create_smaller_multi_synonyms_text_file (vocab_folder, meta_folder, token2text_file, translate_token2text_id)
+    create_smaller_multi_synonyms_text_file (vocab_folder, meta_folder, func_get_title_factory=translate_token2text_id)
 
 if __name__ == '__main__' :
     main_wikititle(n_best_taken= 100000, overwrite=True)

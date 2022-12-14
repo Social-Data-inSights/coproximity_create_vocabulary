@@ -2,7 +2,7 @@
 get the methods to use in create_ngram.py to extract the vocabulary and the synonyms from the most viewed wikipedia pages and their redirections
 '''
 
-import os, csv, json, re, time, string, fasttext, pickle
+import os, csv, json, re, time, string, fasttext, pickle, bz2
 import fasttext.util
 from typing import  List, Dict, Callable
 from coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.util_wiki import unwikititle, rewikititle
@@ -10,6 +10,9 @@ from coproximity_create_vocabulary.extract_vocabulary.basic_method.base_create_v
     create_preprocess_list_words_factory, preprocess_synonyms_factory, create_vocabulary_factory, create_synonyms_factory
 )
 from coproximity_create_vocabulary.extract_vocabulary.basic_method.util_vocab import delete_accent_on_first_if_upper
+
+from coproximity_create_vocabulary.download_wikipedia.create_wikipedia_plain.split_articles_to_csv import split_articles_to_csv
+
 
 print_progress_info = [
     ['preprocess', False],
@@ -56,7 +59,7 @@ def factory_create_title_wiki (stop_words , duplicate_stop_words,
     processed_method, synonym_to_ignore,whole_folder, n_best_taken, vocab_folder, 
     plain_article_title_reader, processed_article_file : str, plain_synonyms_reader , processed_syn_file : str ,
     fasttext_file, fasttext_model, use_id_to_title = False,
-    token2text_file: str = None, translate_token2text_id: Callable = lambda x : x,
+    func_get_title_factory : Callable = None,
     overwrite = False, apply_rewikititle_on_lem=True,
     is_printing_progress: bool = False,
     vocab_additional_filter = [], synonym_additional_filter = []) :
@@ -87,8 +90,7 @@ def factory_create_title_wiki (stop_words , duplicate_stop_words,
     
     use_id_to_title     : if true consider that the wikipedia title csv is made of the wikipedia id and give a id2title_file to create_processed_title
     
-    token2text_file     : File containing texts associated to the titles, json dict {id: text}
-    translate_token2text_id: method to get as an input a token of the Vocabulary and return the associated id in {token2text_file}
+    func_get_title_factory: TODOC replace token2text_file translate_token2text_id
 
     overwrite           : try to overwrite the processed files (but reuse the processed elements if they are shared by the old and new files)
     apply_rewikititle_on_lem: if true make sure that the first letter of each token is upper case
@@ -347,8 +349,8 @@ def factory_create_title_wiki (stop_words , duplicate_stop_words,
         after all the synonyms and title are done, create load a fasttext model and get the vector of the titles which share a common synonym
         '''
 
-        if not token2text_file or not os.path.exists(token2text_file) :
-            print('must abort post_process_create_multi_synonym_vecs: no title_to_id_file')
+        if not func_get_title_factory :
+            print('must abort post_process_create_multi_synonym_vecs: no func_get_title_factory')
             return
 
         #load fasttext
@@ -370,13 +372,12 @@ def factory_create_title_wiki (stop_words , duplicate_stop_words,
 
 
         #get the articles of the titles whose share synonyms with others
-        with open(token2text_file) as f :
-            plains = json.load(f)
-
-        if translate_token2text_id :
-            plains = { title: plains[translate_token2text_id(title)] for title in main_articles if translate_token2text_id(title) in plains }
-        else :
-            plains = { title: plains[title] for title in main_articles if title in plains }
+        func_get_title = func_get_title_factory()
+        plains = {}
+        for art_name in main_articles :
+            plain = func_get_title(art_name)
+            if plain :
+                plains[art_name] = plain
 
         #get the fastext mean over each article
         multiple_vecs = {art_name: model.get_sentence_vector(plain.replace('\n', ' ')) for art_name, plain in plains.items()}
@@ -388,24 +389,81 @@ def factory_create_title_wiki (stop_words , duplicate_stop_words,
 
     return preprocess_wiki, create_vocabulary_wiki, create_synonyms, process_all, post_process_create_multi_synonym_vecs
 
-def create_translate_title2text_id_factory(title_to_id_file) :
+def create_translate_title2text_id_factory(title2id_file, token2text_file) :
     '''
-    load the dict {Wikipedia title: Wikipedia id} from the path {title_to_id_file}, clean the titles
+    token2text_file TODOC 
+
+    load the dict {Wikipedia title: Wikipedia id} from the path {title2id_file}, clean the titles
     and create a method that takes in a title and return its associated id if it exists
     '''
-    with open(title_to_id_file) as f :
-        title_to_id = json.load(f) 
-    title_to_id = { title.replace('_', ' '): id_ for title, id_ in title_to_id.items() }
+    if title2id_file :
+        with open(title2id_file) as f :
+            title2id = json.load(f) 
+        title2id = { title.replace('_', ' '): id_ for title, id_ in title2id.items() }
+    else :
+        title2id = None
+
+    with open(token2text_file) as f :
+        plains = json.load(f)
     def create_translate_title2text_id(title) :
-        return title_to_id.get(title)
+        return plains.get(title2id.get(title)) if title2id else plains.get(title)
     return create_translate_title2text_id
 
-def create_smaller_multi_synonyms_text_file (vocab_folder, save_folder, token2text_file, translate_token2text_id) :
-    '''
-    Given a typical Wikipedia Vocabulary folder (created with main_wikititle.py for example) {vocab_folder}, take all the synonyms which redirect to multiple title,
-    load using the dict {id -> text} from {token2text_file} to get for each of those titles a text description and save the result in the {save_folder} as multi_synonyms_text.json
+def get_dict_search_index(index_filename):
+    data_length = start_byte = 0
+    curr_res, res = set(), {}
+    
+    with bz2.open(index_filename) as f_in  :
+        for line in f_in :
+            curr_start_byte, _, *title = line.decode('utf8').strip().split(':')
+            title = ':'.join(title)
+            curr_start_byte = int(curr_start_byte)
+            if curr_start_byte != start_byte :
+                if curr_res :
+                    res.update({title: (start_byte, curr_start_byte - start_byte) for title in curr_res})
+                curr_res = set()
+                start_byte = curr_start_byte
+                
+            curr_res.add(title)
+            
+    if curr_res :
+        res.update({title: (start_byte, curr_start_byte - start_byte) for title in curr_res})
+    return res
+def get_title_from_dump_factory(index_filename, wiki_filename, temp_filename) :
+    dict_search_index = get_dict_search_index(index_filename)
 
-    translate_token2text_id: method that takes the title as saved in the multiple_synonyms.json and return their equivalent index in the content of {token2text_file}
+    def get_title_from_dump(title) :
+        if not title in dict_search_index:
+            return
+        
+        start_byte, data_length = dict_search_index[title]
+
+        with open(wiki_filename, 'rb') as wiki_file:
+            wiki_file.seek(start_byte)
+            data = wiki_file.read(data_length)
+
+        with open(temp_filename, 'wb') as temp_file:
+            temp_file.write(data)
+
+        return split_articles_to_csv (
+            whole_dir = '',
+            from_xml_bz2 = temp_filename,
+            dump_save_to = None ,
+            threshold_skip_little = 0,
+            what_to_do_result = 'return_dict_title',
+            get_only_ids = None,
+            get_only_title = {title},
+            is_printing=False,
+        ).get(title)
+    return get_title_from_dump
+
+def create_smaller_multi_synonyms_text_file (vocab_folder, save_folder, func_get_title_factory) :
+    '''
+    func_get_title_factory TODOC
+
+    Given a typical Wikipedia Vocabulary folder (created with main_wikititle.py for example) {vocab_folder}, take all the synonyms which redirect to multiple title,
+    TODOC and save the result in the {save_folder} as multi_synonyms_text.json
+
     '''
     with open(vocab_folder + 'multiple_synonyms.json') as f :
         multiples_synonyms = json.load(f)
@@ -415,13 +473,12 @@ def create_smaller_multi_synonyms_text_file (vocab_folder, save_folder, token2te
 
 
     #get the articles of the titles whose share synonyms with others
-    with open(token2text_file) as f :
-        plains = json.load(f)
-    
-    if translate_token2text_id :
-        plains = { title: plains[translate_token2text_id(title)] for title in main_articles if translate_token2text_id(title) in plains }
-    else :
-        plains = { title: plains[title] for title in main_articles if title in plains }
+    func_get_title = func_get_title_factory()
+    plains = {}
+    for art_name in main_articles :
+        plain = func_get_title(art_name)
+        if plain :
+            plains[art_name] = plain
 
     with open(save_folder + 'multi_synonyms_text.json', 'w', encoding='utf8') as f :
         json.dump(plains, f, indent=2)
