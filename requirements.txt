@@ -1,0 +1,5 @@
+flask
+spacy
+requests
+fasttext
+mwparserfromhell
