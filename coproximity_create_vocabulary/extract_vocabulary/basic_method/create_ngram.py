@@ -1,7 +1,7 @@
 '''
 Template to create a vocabulary and it synonyms. 
 '''
-import  json , os, csv
+import  json , os
 from typing import  Callable
 
 def save_all (to_save, vocab_folder) :

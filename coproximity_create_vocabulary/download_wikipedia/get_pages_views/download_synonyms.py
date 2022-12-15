@@ -7,7 +7,7 @@ pages : https://dumps.wikimedia.org/{project}wiki/latest/{project}wiki-latest-pa
 '''
 
 import os, gzip, json, csv
-from util import download_page
+from coproximity_create_vocabulary.download_wikipedia.get_pages_views.util import download_page
 
 from coproximity_create_vocabulary.data_conf import base_vocab_folder
 

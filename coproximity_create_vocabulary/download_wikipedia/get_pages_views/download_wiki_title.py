@@ -9,7 +9,7 @@ from datetime import datetime
 from multiprocessing import Pool
 from collections import Counter
 
-from util import download_page
+from coproximity_create_vocabulary.download_wikipedia.get_pages_views.util import download_page
 
 from coproximity_create_vocabulary.data_conf import base_vocab_folder
 
@@ -127,7 +127,7 @@ def reduce_size_dump(save_filename, reduced_save_filename, set_allowed_projects)
                         
             if counter:
                 f_out.write(b'\n'.join(
-                    b'%b %b %b %i'%(count_project, id_, title, count) 
+                    b'%b %b %b %i'%(count_project, title, id_, count) 
                     for (id_, title), count in counter.items() )
                 )
     os.remove(save_filename)
@@ -157,7 +157,7 @@ def count_title_id(save_file, count_folder, project) :
                 line = line.decode('utf-8').strip().split(' ')
 
                 if len(line) == 4 :
-                    project, id_, title, count = line
+                    count, title, id_, count = line
                     title_count[title] += int(count)
                     id_count[id_] += int(count)
                 else :
@@ -205,7 +205,7 @@ def get_title_count_sorted(sorted_view_file, dump_folder, begin_month, id2title_
             nb_word_by_year.update(curr_year_set_word)
             curr_year_set_word = set()
         
-        title_file = dump_folder + 'pageviews-%d%02d-user_title_count.json' % (it_year, it_month)
+        title_file = dump_folder + 'pageviews-%d%02d-user_reduce_title_count.json' % (it_year, it_month)
         with open(title_file, encoding='utf8') as f :
             curr_title_count = json.load(f)
         #filter the non main pages and cast the count as int
@@ -267,7 +267,7 @@ def main_download_wiki_title(project, vocab_folder_name, set_allowed_projects=de
         for it_year_month in iter_month(begin_month) :
             downloader_and_saver.download_and_save(it_year_month)
 
-    get_title_count_sorted(sorted_view_file, dump_folder, begin_month, id2title_file, synonyms_file)
+    get_title_count_sorted(sorted_view_file, count_folder, begin_month, id2title_file, synonyms_file)
 
 if __name__ == '__main__' : 
     main_download_wiki_title(begin_month = (2016, 1))

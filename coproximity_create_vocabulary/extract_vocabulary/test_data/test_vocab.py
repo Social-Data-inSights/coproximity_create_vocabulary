@@ -11,9 +11,17 @@ from coproximity_create_vocabulary.data_conf import base_vocab_folder
 
 import os
 
-whole_folder = base_vocab_folder + 'whole/test_data/vocabulary/'
+whole_folder = base_vocab_folder + 'test_data/vocabulary/'
 vocab_parent_folder = whole_folder + 'ngram_title_wiki/'
 meta_folder = whole_folder + 'meta/'
+
+split_meta_folder = meta_folder.split('/')
+new_folder = ''
+for add_folder in split_meta_folder :
+    new_folder += add_folder + '/'
+    print(new_folder, os.path.exists(new_folder))
+    if not os.path.exists(new_folder):
+        os.mkdir(new_folder)
 
 for filename in os.listdir(meta_folder) :
     filepath = meta_folder + filename

@@ -14,7 +14,7 @@ from coproximity_create_vocabulary.data_conf import base_vocab_folder
 
 
 default_whole_folder = base_vocab_folder + '/whole/vocabulary/french/'
-def main_default_wikititle(
+def create_default_wikititle(
     n_best_taken, spacy_model, disable_tag, project, overwrite=False, print_progress_info=False, whole_folder :str = default_whole_folder
 ) :
     '''
@@ -47,7 +47,7 @@ def main_default_wikititle(
     for use_lower_processed in [False, True] :
         for use_no_accent_processed in [False, True] :
             if project in var_getter_by_project :
-                stop_words , duplicate_stop_words, processed_method, synonym_to_ignore, word_to_add, synonym_to_add, _ = \
+                stop_words , duplicate_stop_words, processed_method, synonym_to_ignore, word_to_add, synonym_to_add, _, _ = \
                     var_getter_by_project[project](use_lower_processed=use_lower_processed, use_no_accent_processed=use_no_accent_processed)
             else :
                 stop_words , duplicate_stop_words, synonym_to_ignore, word_to_add, synonym_to_add =\
@@ -128,6 +128,18 @@ def main_wiki_fr_create_smaller_multi_synonyms_text_file(project, wiki_title_fr_
 
 
     create_smaller_multi_synonyms_text_file (vocab_folder, meta_folder, func_get_title_factory)
+
+def main_default_wikititle(spacy_model, disable_tag, project, print_progress_info=False, whole_folder :str = default_whole_folder) :
+    '''
+    TODOC
+    '''
+    create_default_wikititle(
+        int(1e5), spacy_model, disable_tag, project, overwrite=True, print_progress_info=print_progress_info, whole_folder = whole_folder
+    )
+    create_default_wikititle(
+        int(2e5), spacy_model, disable_tag, project, overwrite=False, print_progress_info=print_progress_info, whole_folder = whole_folder
+    )
+    main_wiki_fr_create_smaller_multi_synonyms_text_file(project, wiki_title_fr_folder=whole_folder)
 
 if __name__ == '__main__' :
     main_default_wikititle(n_best_taken= 100000)

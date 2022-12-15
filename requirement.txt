@@ -1,0 +1,5 @@
+gzip
+json
+csv
+spacy
+requests

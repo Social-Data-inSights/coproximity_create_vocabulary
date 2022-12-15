@@ -1,5 +1,6 @@
-
-import os
+'''
+TODOC
+'''
 
 from coproximity_create_vocabulary.data_conf import base_vocab_folder
 from coproximity_create_vocabulary.download_wikipedia.get_pages_views.download_synonyms import main_download_synonyms
@@ -9,6 +10,7 @@ from coproximity_create_vocabulary.download_wikipedia.get_pages_views.util impor
 
 
 def main_downloader_wiki(project, vocab_folder_name, save_parent_folder=base_vocab_folder) :
+    print('start main_downloader_wiki')
     main_download_synonyms(project, vocab_folder_name, save_parent_folder=save_parent_folder)
     main_download_wiki_title(
         project, vocab_folder_name, save_parent_folder=save_parent_folder, set_allowed_projects = {b'fr' , b'en', b'it', b'de'},
@@ -25,6 +27,7 @@ def main_downloader_wiki(project, vocab_folder_name, save_parent_folder=base_voc
         index_dump_file,
         f'https://dumps.wikimedia.org/{project}wiki/latest/{project}wiki-latest-pages-articles-multistream-index.txt.bz2'
     )
+
 
 if __name__ == '__main__' :
     for project, vocab_folder_name in [
