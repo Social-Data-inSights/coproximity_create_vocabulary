@@ -12,7 +12,9 @@ from coproximity_create_vocabulary.download_wikipedia.get_pages_views.main_downl
 from coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.main_get_default_by_project import main_default_wikititle
 
 def main_generate_vocab(project, vocab_folder_name, save_parent_folder=base_vocab_folder, spacy_model = None, disable_tag = None) :
-    #main_downloader_wiki(project, vocab_folder_name)
+    print('__________', main_downloader_wiki)
+    main_downloader_wiki(project, vocab_folder_name)
+    print('__________', main_downloader_wiki)
     main_default_wikititle(spacy_model, disable_tag, project, print_progress_info=False, whole_folder = save_parent_folder + vocab_folder_name + '/')
 
 
@@ -31,8 +33,9 @@ if __name__ == '__main__' :
         raise Exception('Has arguments main_generate_vocab but missing the main args (project name and vocab name')
 
     if has_main_args :
-        disable_tag = args.disable_tag.split('_') if args.disable_tag else args.disable_tag
-        main_generate_vocab(args.project, args.vocab_name, save_parent_folder=base_vocab_folder, spacy_model=args.spacy_model, disable_tag=args.disable_tag)
+        spacy_model = args.spacy_model if args.spacy_model else None
+        disable_tag = args.disable_tag.split('_') if args.disable_tag else None
+        main_generate_vocab(args.project, args.vocab_name, save_parent_folder=base_vocab_folder, spacy_model=spacy_model, disable_tag=args.disable_tag)
     else :
         #default project values
         for project, vocab_folder_name, spacy_model, disable_tag in [
