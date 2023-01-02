@@ -6,19 +6,20 @@ RUN mkdir vm
 VOLUME ["/vm/data/"]
 
 RUN pip install spacy
-RUN python -m spacy download pt_core_news_sm
+RUN python -m spacy download de_core_news_sm
 
 RUN git clone https://github.com/matthieuDev/coproximity_create_vocabulary.git
 
 WORKDIR coproximity_create_vocabulary
-RUN echo "parent_folder_init = '/vm/data/'" >>  ./coproximity_create_vocabulary/.env
+RUN echo "parent_folder_init = '/vm/data/'\nset_allowed_download_projects = 'fr_en_it_de'" >>  ./coproximity_create_vocabulary/.env
 #pip install pre cache
 RUN pip install -e . 
 
 ARG CACHEBUST=1
+RUN echo "$CACHEBUST"
 RUN git pull
 
 
 RUN pip install -e . 
 
-CMD python coproximity_create_vocabulary/main_generate_vocab.py -p pt -v portuguese --spacy_model pt_core_news_sm --disable_tag tagger_parser_ner
+CMD python coproximity_create_vocabulary/main_generate_vocab.py -p de -v german --spacy_model de_core_news_sm --disable_tag tagger_parser_ner

@@ -12,9 +12,7 @@ from coproximity_create_vocabulary.download_wikipedia.get_pages_views.main_downl
 from coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.main_get_default_by_project import main_default_wikititle
 
 def main_generate_vocab(project, vocab_folder_name, save_parent_folder=base_vocab_folder, spacy_model = None, disable_tag = None) :
-    print('__________', main_downloader_wiki)
     main_downloader_wiki(project, vocab_folder_name)
-    print('__________', main_downloader_wiki)
     main_default_wikititle(spacy_model, disable_tag, project, print_progress_info=False, whole_folder = save_parent_folder + vocab_folder_name + '/')
 
 

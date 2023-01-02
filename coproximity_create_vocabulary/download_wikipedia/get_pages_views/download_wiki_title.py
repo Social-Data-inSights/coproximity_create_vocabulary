@@ -11,7 +11,7 @@ from collections import Counter
 
 from coproximity_create_vocabulary.download_wikipedia.get_pages_views.util import download_page
 
-from coproximity_create_vocabulary.data_conf import base_vocab_folder
+from coproximity_create_vocabulary.data_conf import base_vocab_folder, set_allowed_download_projects
 
 class iter_month :
     '''
@@ -230,8 +230,7 @@ def get_title_count_sorted(sorted_view_file, dump_folder, begin_month, id2title_
         for word, count in sorted(mean_word.items(), key = lambda x : x[1], reverse=True) :
             writer.writerow((word, count))
 
-default_set_allowed_projects = {b'fr' , b'en', b'it', b'de'}
-def main_download_wiki_title(project, vocab_folder_name, set_allowed_projects=default_set_allowed_projects, begin_month = None, use_multiprocessing = True, save_parent_folder=base_vocab_folder) :
+def main_download_wiki_title(project, vocab_folder_name, set_allowed_projects=set_allowed_download_projects, begin_month = None, use_multiprocessing = True, save_parent_folder=base_vocab_folder) :
     '''
     Download the pageviews by article
 

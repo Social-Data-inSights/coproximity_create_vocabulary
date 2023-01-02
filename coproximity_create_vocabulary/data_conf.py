@@ -14,6 +14,7 @@ if os.path.exists(env_file) :
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--parent_folder_init', default=None,  help = 'parent_folder_init')
+parser.add_argument('--allowed_download_projects', default=None,  help = 'allowed_download_projects')
 args, unknown = parser.parse_known_args()
 
 if args.parent_folder_init :
@@ -22,6 +23,11 @@ else :
     parent_folder_init = os.environ.get('parent_folder_init')
 
 assert not parent_folder_init is None, 'set the data folder, either in the data_conf folder or  by adding a --parent_folder_init argument'
+
+if args.allowed_download_projects :
+    set_allowed_download_projects = { project.encode('utf8') for project in args.allowed_download_projects.split('_') }
+else :
+    set_allowed_download_projects = { project.encode('utf8') for project in os.environ.get('set_allowed_download_projects').split('_') }
 
 base_module = os.path.relpath((coproximity_create_vocabulary.__path__)._path[0]).replace('\\', '/') + '/'
 if os.path.isabs(parent_folder_init) :

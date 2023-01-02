@@ -52,7 +52,6 @@ def create_ngram_framework (
     '''
     #create the folder in which to save if it is not already created
     for to_create in [ vocab_parent_folder , vocab_folder ] :
-        print(os.path.exists (to_create), to_create)
         if not os.path.exists (to_create) :
             os.mkdir(to_create)
 
