@@ -1,0 +1,14 @@
+version: '3.2'
+services:
+  auto_vocab_runner:
+    image: auto_vocab
+    ports:
+      - 5003:5001
+    volumes:
+      - type: bind
+        source: /home/matthieu/data/backend/data
+        target: /vm/data/
+        read_only: true
+      - type: bind
+        source: ./logs_en
+        target: /vm/logs/
