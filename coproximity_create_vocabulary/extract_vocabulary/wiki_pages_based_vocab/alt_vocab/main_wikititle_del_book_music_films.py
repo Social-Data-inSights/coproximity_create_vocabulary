@@ -82,7 +82,7 @@ def main_wikititle_del_book_music_films (
     synonyms_file = whole_folder + 'meta/synonyms.csv'
     processed_syn_file = get_processed_file(synonyms_file, spacy_model, disable_tag, 'csv')
 
-    func_get_text_from_title_factory = create_translate_title2text_id_factory(
+    func_get_text_from_title_factory = lambda : create_translate_title2text_id_factory(
         base_data_folder + '/wikipedia/whole/meta_wiki/title_to_id.json',
         base_data_folder + '/wikipedia/best_avg_250.000.json'
     )

@@ -28,7 +28,7 @@ def main_wikititle(n_best_taken, base_data_folder, use_id_to_title=False, overwr
     synonyms_file = whole_folder + 'meta/synonyms.csv'
     processed_syn_file = get_processed_file(synonyms_file, spacy_model, disable_tag, 'csv')
 
-    func_get_text_from_title_factory = create_translate_title2text_id_factory(
+    func_get_text_from_title_factory = lambda : create_translate_title2text_id_factory(
         base_data_folder + '/wikipedia/whole/meta_wiki/title_to_id.json',
         base_data_folder + '/wikipedia/best_avg_250.000.json',
     )
@@ -104,7 +104,7 @@ def main_wiki_en_create_smaller_multi_synonyms_text_file(base_data_folder=test_d
     vocab_folder = wiki_title_en_folder+'ngram_title_wiki/wiki_title_%s%s/'%('whole' if n_best_taken is None else 'best_%d'%n_best_taken, new_str)
     meta_folder = wiki_title_en_folder + 'meta/'
 
-    func_get_text_from_title_factory = create_translate_title2text_id_factory(
+    func_get_text_from_title_factory = lambda : create_translate_title2text_id_factory(
         base_data_folder + '/wikipedia/whole/meta_wiki/title_to_id.json',
         base_data_folder + '/wikipedia/best_avg_250.000.json',
     )

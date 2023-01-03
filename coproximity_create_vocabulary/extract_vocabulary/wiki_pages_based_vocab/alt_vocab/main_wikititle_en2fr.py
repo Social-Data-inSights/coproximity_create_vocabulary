@@ -173,7 +173,7 @@ def main_wikititle_en2fr(base_data_folder=test_data_folder) :
     create_title_en2fr, post_process_en2fr = wikititle_en2fr ()
 
     processed_list_select, processed_method_list, preprocessed_apply_rewikititle_on_lem_list = get_preprocess_args(spacy_model, disable_tag=['parser', 'ner'])
-    func_get_text_from_title_factory = create_translate_title2text_id_factory(
+    func_get_text_from_title_factory = lambda : create_translate_title2text_id_factory(
         base_data_folder + '/wikipedia/whole/meta_wiki/title_to_id.json',
         base_data_folder + '/wikipedia/best_avg_250.000.json',
     )
