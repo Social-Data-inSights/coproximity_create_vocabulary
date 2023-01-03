@@ -11,9 +11,9 @@ from coproximity_create_vocabulary.download_wikipedia.get_pages_views.main_downl
 
 from coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.main_get_default_by_project import main_default_wikititle
 
-def main_generate_vocab(project, vocab_folder_name, save_parent_folder=base_vocab_folder, spacy_model = None, disable_tag = None) :
-    main_downloader_wiki(project, vocab_folder_name)
-    main_default_wikititle(spacy_model, disable_tag, project, print_progress_info=False, whole_folder = save_parent_folder + vocab_folder_name + '/')
+def main_generate_vocab(project, vocab_folder_name, fasttext_model, save_parent_folder=base_vocab_folder, spacy_model = None, disable_tag = None) :
+    #main_downloader_wiki(project, vocab_folder_name)
+    main_default_wikititle(spacy_model, disable_tag, fasttext_model, project, print_progress_info=False, whole_folder = save_parent_folder + vocab_folder_name + '/')
 
 
 if __name__ == '__main__' :
@@ -22,6 +22,7 @@ if __name__ == '__main__' :
     parser.add_argument('--vocab_name', '-v', default=None,  help = 'vocab_name')
     parser.add_argument('--spacy_model', default=None,  help = 'spacy_model')
     parser.add_argument('--disable_tag', default=None,  help = 'disable_tag')
+    parser.add_argument('--fasttext_model', default=None,  help = 'fasttext_model')
     args, unknown = parser.parse_known_args()
 
     nb_args = len([arg_val for arg_val in args.__dict__.values() if not arg_val is None])
@@ -33,12 +34,12 @@ if __name__ == '__main__' :
     if has_main_args :
         spacy_model = args.spacy_model if args.spacy_model else None
         disable_tag = args.disable_tag.split('_') if args.disable_tag else None
-        main_generate_vocab(args.project, args.vocab_name, save_parent_folder=base_vocab_folder, spacy_model=spacy_model, disable_tag=disable_tag)
+        main_generate_vocab(args.project, args.vocab_name, fasttext_model=args.fasttext_model, save_parent_folder=base_vocab_folder, spacy_model=spacy_model, disable_tag=disable_tag)
     else :
         #default project values
-        for project, vocab_folder_name, spacy_model, disable_tag in [
+        for project, vocab_folder_name, spacy_model, disable_tag, fasttext_model in [
             #is none because we have an argument getter  in var_getter_by_project
-            #('fr', 'french', None, None),
-            ('en', 'english', None, None),
+            #('fr', 'french', None, None, 'en'),
+            ('en', 'english', None, None, 'fr'),
         ] :
-            main_generate_vocab(project, vocab_folder_name, save_parent_folder=base_vocab_folder, spacy_model=spacy_model, disable_tag=disable_tag)
+            main_generate_vocab(project, vocab_folder_name, fasttext_model=fasttext_model, save_parent_folder=base_vocab_folder, spacy_model=spacy_model, disable_tag=disable_tag)

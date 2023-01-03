@@ -15,7 +15,7 @@ from coproximity_create_vocabulary.data_conf import base_vocab_folder
 
 default_whole_folder = base_vocab_folder + 'french/'
 def create_default_wikititle(
-    n_best_taken, spacy_model, disable_tag, project, overwrite=False, print_progress_info=False, whole_folder :str = default_whole_folder
+    n_best_taken, spacy_model, disable_tag, fasttext_model, project, overwrite=False, print_progress_info=False, whole_folder :str = default_whole_folder
 ) :
     '''
     n_best_taken: size of the vocabulary to create
@@ -76,8 +76,8 @@ def create_default_wikititle(
                 processed_article_file,
                 plain_synonyms_reader, 
                 processed_syn_file,
-                whole_folder + 'cc.fr.300.bin',
-                'fr',
+                whole_folder + f'cc.{fasttext_model}.300.bin',
+                fasttext_model,
                 apply_rewikititle_on_lem= not use_lower_processed,
                 func_get_text_from_title_factory=func_get_text_from_title_factory,
                 overwrite=overwrite,
@@ -129,15 +129,15 @@ def main_wiki_fr_create_smaller_multi_synonyms_text_file(project, wiki_title_fr_
 
     create_smaller_multi_synonyms_text_file (vocab_folder, meta_folder, func_get_text_from_title_factory)
 
-def main_default_wikititle(spacy_model, disable_tag, project, print_progress_info=False, whole_folder :str = default_whole_folder) :
+def main_default_wikititle(spacy_model, disable_tag, fasttext_model, project, print_progress_info=False, whole_folder :str = default_whole_folder) :
     '''
     TODOC
     '''
     create_default_wikititle(
-        int(1e5), spacy_model, disable_tag, project, overwrite=True, print_progress_info=print_progress_info, whole_folder = whole_folder
+        int(1e5), spacy_model, disable_tag, fasttext_model, project, overwrite=True, print_progress_info=print_progress_info, whole_folder = whole_folder
     )
     create_default_wikititle(
-        int(2e5), spacy_model, disable_tag, project, overwrite=False, print_progress_info=print_progress_info, whole_folder = whole_folder
+        int(2e5), spacy_model, disable_tag, fasttext_model, project, overwrite=False, print_progress_info=print_progress_info, whole_folder = whole_folder
     )
     main_wiki_fr_create_smaller_multi_synonyms_text_file(project, wiki_title_fr_folder=whole_folder)
 
