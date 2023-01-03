@@ -13,7 +13,7 @@ from coproximity_create_vocabulary.extract_vocabulary.basic_method.auto_reader_w
 from coproximity_create_vocabulary.data_conf import base_vocab_folder
 
 
-default_whole_folder = base_vocab_folder + '/whole/vocabulary/french/'
+default_whole_folder = base_vocab_folder + 'french/'
 def create_default_wikititle(
     n_best_taken, spacy_model, disable_tag, project, overwrite=False, print_progress_info=False, whole_folder :str = default_whole_folder
 ) :
@@ -103,7 +103,7 @@ def create_default_wikititle(
                 is_printing_progress=print_progress_info,
             )
 
-default_wiki_title_fr_folder : str = base_vocab_folder + '/whole/vocabulary/french/'
+default_wiki_title_fr_folder : str = base_vocab_folder + 'french/'
 def main_wiki_fr_create_smaller_multi_synonyms_text_file(project, wiki_title_fr_folder=default_wiki_title_fr_folder) :
     '''
     project TODOC

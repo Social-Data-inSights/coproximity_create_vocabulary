@@ -2,6 +2,8 @@
 
 Create the vocabulary to detect in texts to be used as nodes in the graph.
 
+TODOC Big main : main_generate_vocab
+
 ## Folder
 
 ### analysis

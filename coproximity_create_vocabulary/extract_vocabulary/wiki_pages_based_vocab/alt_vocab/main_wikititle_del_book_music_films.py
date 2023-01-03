@@ -15,6 +15,7 @@ import json
 
 
 
+test_data_folder = base_vocab_folder + 'test_data/'
 def factory_vocabulary_get_problems_and_ask_if_stopping(
     wiki_title2categories_file, black_list_category_file, white_list_category_file=None,
 ) :
@@ -55,7 +56,7 @@ def factory_vocabulary_get_problems_and_ask_if_stopping(
 
 
 def main_wikititle_del_book_music_films (
-    n_best_taken, use_id_to_title=False, overwrite=False, additional_folder_name = '', print_progress_info=False,
+    n_best_taken, base_data_folder, use_id_to_title=False, overwrite=False, additional_folder_name = '', print_progress_info=False,
     use_lower_processed = False, use_no_accent_processed = False,
 ) :
     '''
@@ -71,8 +72,8 @@ def main_wikititle_del_book_music_films (
     wiki_title2categories_file = categories_folder + 'title2categories.json'
     black_list_category_file = categories_folder + 'all_trimmed_flatten_set_categories.json'
 
-    whole_folder :str = base_vocab_folder + '/whole/vocabulary/french/'
-    vocab_parent_folder = base_vocab_folder + '/whole/vocabulary/french/ngram_title_wiki/'
+    whole_folder :str = base_vocab_folder + 'french/'
+    vocab_parent_folder = base_vocab_folder + 'french/ngram_title_wiki/'
     
     _ , _, _, _, _, _, spacy_model, disable_tag = get_french_var()
 
@@ -82,8 +83,8 @@ def main_wikititle_del_book_music_films (
     processed_syn_file = get_processed_file(synonyms_file, spacy_model, disable_tag, 'csv')
 
     func_get_text_from_title_factory = create_translate_title2text_id_factory(
-        base_vocab_folder + '/wikipedia/whole/meta_wiki/title_to_id.json',
-        base_vocab_folder + '/wikipedia/best_avg_250.000.json'
+        base_data_folder + '/wikipedia/whole/meta_wiki/title_to_id.json',
+        base_data_folder + '/wikipedia/best_avg_250.000.json'
     )
 
 
@@ -147,4 +148,4 @@ def main_wikititle_del_book_music_films (
 
 
 if __name__ == '__main__' :
-    main_wikititle_del_book_music_films(n_best_taken= 100000, use_id_to_title=False)
+    main_wikititle_del_book_music_films(n_best_taken= 100000, base_data_folder=test_data_folder,  use_id_to_title=False)

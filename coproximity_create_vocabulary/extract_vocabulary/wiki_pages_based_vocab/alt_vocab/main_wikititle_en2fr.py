@@ -17,6 +17,7 @@ from coproximity_create_vocabulary.extract_vocabulary.basic_method.util_vocab im
 
 n_best_taken = int(1e5)
 
+test_data_folder = base_vocab_folder + 'test_data/'
 def get_translate_from_dump(from_, to_, save_file, translate_folder, from_id2title_file):
     '''
     Get the the associated wikipedia pages between 2 language. i.e. if we have en and fr, get all the pages which can are the same but just
@@ -60,10 +61,10 @@ n_best_taken = int(1e5)
 
 _ , _, _, _, _, _, spacy_model, disable_tag = get_english_var()
 
-whole_vocab_folder = base_vocab_folder + 'whole/vocabulary/'
-whole_folder :str = base_vocab_folder + '/whole/vocabulary/english/'
+whole_vocab_folder = base_vocab_folder 
+whole_folder :str = base_vocab_folder + 'english/'
 translate_folder = whole_vocab_folder+'translate/'
-vocab_parent_folder = base_vocab_folder + '/whole/vocabulary/english/ngram_title_wiki/'
+vocab_parent_folder = base_vocab_folder + 'english/ngram_title_wiki/'
 
 fr_id2title_file = whole_vocab_folder + 'french/meta/id2title.json'
 en_id2title_file = whole_vocab_folder + 'english/meta/id2title.json'
@@ -72,10 +73,10 @@ vocab_folder = whole_vocab_folder+'english/ngram_title_wiki/wiki_title_fr_in_en_
 
 synonyms_file = whole_folder + 'meta/synonyms.csv'
 processed_syn_file = get_processed_file(synonyms_file, spacy_model, disable_tag, 'csv')
-article_list_file=  base_vocab_folder + '/whole/vocabulary/english/meta/sorted_view_wiki_over_years.csv'
+article_list_file=  base_vocab_folder + 'english/meta/sorted_view_wiki_over_years.csv'
 processed_article_file = get_processed_file(article_list_file, spacy_model, disable_tag, 'csv')
 
-french_set_articles_file = base_vocab_folder + 'whole/vocabulary/french/ngram_title_wiki/wiki_title_best_100000/set_tokens.json'
+french_set_articles_file = base_vocab_folder + 'french/ngram_title_wiki/wiki_title_best_100000/set_tokens.json'
 
 wiki_title_fr_folder = whole_vocab_folder + 'french/ngram_title_wiki/wiki_title_best_100000/'
 wiki_title_en_folder = whole_vocab_folder + 'english/ngram_title_wiki/wiki_title_best_100000/'
@@ -166,15 +167,15 @@ def wikititle_en2fr (use_lower_processed = False, use_no_accent_processed = Fals
 
     return create_title_en2fr, post_process_en2fr
 
-if __name__ == '__main__' :
+def main_wikititle_en2fr(base_data_folder=test_data_folder) :
     use_lower_processed, use_no_accent_processed = False, False
 
     create_title_en2fr, post_process_en2fr = wikititle_en2fr ()
 
     processed_list_select, processed_method_list, preprocessed_apply_rewikititle_on_lem_list = get_preprocess_args(spacy_model, disable_tag=['parser', 'ner'])
     func_get_text_from_title_factory = create_translate_title2text_id_factory(
-        base_vocab_folder + '/wikipedia/whole/meta_wiki/title_to_id.json',
-        base_vocab_folder + '/wikipedia/best_avg_250.000.json',
+        base_data_folder + '/wikipedia/whole/meta_wiki/title_to_id.json',
+        base_data_folder + '/wikipedia/best_avg_250.000.json',
     )
     plain_article_title_reader = auto_reader(article_list_file, csv_args = dict(delimiter=';', quotechar='"'))
     plain_synonyms_reader = auto_reader(synonyms_file, csv_args = dict(delimiter=';', quotechar='"'))
@@ -220,3 +221,6 @@ if __name__ == '__main__' :
         {},
         is_printing_progress=True,
     )
+
+if __name__ == '__main__' :
+    main_wikititle_en2fr()

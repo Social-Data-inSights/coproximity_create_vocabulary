@@ -2,6 +2,12 @@
 
 Create vocabulary and synonyms using Wikipedia titles and redirect.
 
+TODOC différencier main_get_default_by_project.py avec main_wikititle.py
+
+TODOC add alt_vocab
+
+TODOC explain base_data_folder in the mains
+
 ## Folder
 
 ### get_pages_views

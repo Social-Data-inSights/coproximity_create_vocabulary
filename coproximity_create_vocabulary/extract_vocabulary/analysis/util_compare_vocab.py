@@ -81,7 +81,7 @@ def save_compare_vocabulary(vocab_folder_a, vocab_folder_b, save_file, which_com
 
 if __name__ == '__main__' :
     save_folder = base_vocab_folder + 'data_analysis/vocab_analysis/'
-    french_parent_vocab_folder = base_vocab_folder + '/whole/vocabulary/french/ngram_title_wiki/'
+    french_parent_vocab_folder = base_vocab_folder + 'french/ngram_title_wiki/'
     
     main_100Kvocab_folder = french_parent_vocab_folder + 'wiki_title_best_100000/'
     del_cat_100Kvocab_folder = french_parent_vocab_folder + 'wiki_title_del_book_music_films_best_100000/'

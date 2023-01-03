@@ -9,7 +9,8 @@ from create_ngram import create_ngram_framework, get_processed_file
 
 from coproximity_create_vocabulary.data_conf import base_vocab_folder
 
-def main_wikititle_wiktionary(n_best_taken, use_id_to_title=True, overwrite=False, additional_folder_name = '', print_progress_info=False) :
+test_data_folder = base_vocab_folder + 'test_data/'
+def main_wikititle_wiktionary(n_best_taken, base_data_folder, use_id_to_title=True, overwrite=False, additional_folder_name = '', print_progress_info=False) :
     '''
     create the vocabulary for the Wiktionnary in french
     
@@ -21,7 +22,7 @@ def main_wikititle_wiktionary(n_best_taken, use_id_to_title=True, overwrite=Fals
     '''
     stop_words , duplicate_stop_words, processed_method, synonym_to_ignore, word_to_add, synonym_to_add, spacy_model, disable_tag = get_french_var()
 
-    data_folder = base_vocab_folder + '/'
+    data_folder = base_data_folder + '/'
     vocab_parent_folder = data_folder + 'whole/vocabulary/french/ngram_title_wiki/'
     article_list_file=  data_folder + 'wikipedia/sorted_view_wiki_over_years.csv'
     processed_article_file = get_processed_file(article_list_file, spacy_model, disable_tag, 'csv')
@@ -67,4 +68,4 @@ def main_wikititle_wiktionary(n_best_taken, use_id_to_title=True, overwrite=Fals
     )
 
 if __name__ == '__main__' :
-    main_wikititle_wiktionary(n_best_taken= 100000)
+    main_wikititle_wiktionary(n_best_taken= 100000, base_data_folder=test_data_folder)

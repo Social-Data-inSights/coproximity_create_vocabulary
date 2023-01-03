@@ -12,13 +12,14 @@ from coproximity_create_vocabulary.extract_vocabulary.basic_method.auto_reader_w
 
 from coproximity_create_vocabulary.data_conf import base_vocab_folder
 
-def main_wikititle(n_best_taken, use_id_to_title=False, overwrite=False, additional_folder_name = '', print_progress_info=False) : 
+test_data_folder = base_vocab_folder + 'test_data/'
+def main_wikititle(n_best_taken, base_data_folder, use_id_to_title=False, overwrite=False, additional_folder_name = '', print_progress_info=False) : 
     '''
     n_best_taken: size of the vocabulary to create
     '''
     
-    whole_folder :str = base_vocab_folder + '/whole/vocabulary/english'
-    vocab_parent_folder = base_vocab_folder + '/whole/vocabulary/english/ngram_title_wiki/'
+    whole_folder :str = base_vocab_folder + 'english'
+    vocab_parent_folder = base_vocab_folder + 'english/ngram_title_wiki/'
     
     _ , _, _, _, _, _, spacy_model, disable_tag = get_english_var()
 
@@ -28,8 +29,8 @@ def main_wikititle(n_best_taken, use_id_to_title=False, overwrite=False, additio
     processed_syn_file = get_processed_file(synonyms_file, spacy_model, disable_tag, 'csv')
 
     func_get_text_from_title_factory = create_translate_title2text_id_factory(
-        base_vocab_folder + '/wikipedia/whole/meta_wiki/title_to_id.json',
-        base_vocab_folder + '/wikipedia/best_avg_250.000.json',
+        base_data_folder + '/wikipedia/whole/meta_wiki/title_to_id.json',
+        base_data_folder + '/wikipedia/best_avg_250.000.json',
     )
 
     for use_lower_processed in [False, True] :
@@ -87,7 +88,7 @@ def main_wikititle(n_best_taken, use_id_to_title=False, overwrite=False, additio
                 is_printing_progress=print_progress_info,
             )
 
-def main_wiki_en_create_smaller_multi_synonyms_text_file() :
+def main_wiki_en_create_smaller_multi_synonyms_text_file(base_data_folder=test_data_folder) :
     '''
     Create a dict which, for the vocabulary folder which have the most synonyms which redirect to multiple titles (i.e. all lower and no accent),
     for all titles which have a at least one synonym which redirect to multiple titles, we get their text description (used for giving them a doc2vec vector with the fasttext)
@@ -99,18 +100,18 @@ def main_wiki_en_create_smaller_multi_synonyms_text_file() :
     n_best_taken = 200000
     new_str = f"{'_lower' if use_lower_processed else ''}{'_no_accent' if use_no_accent_processed else ''}"
             
-    wiki_title_en_folder :str = base_vocab_folder + '/whole/vocabulary/english'
+    wiki_title_en_folder :str = base_vocab_folder + 'english'
     vocab_folder = wiki_title_en_folder+'ngram_title_wiki/wiki_title_%s%s/'%('whole' if n_best_taken is None else 'best_%d'%n_best_taken, new_str)
     meta_folder = wiki_title_en_folder + 'meta/'
 
     func_get_text_from_title_factory = create_translate_title2text_id_factory(
-        base_vocab_folder + '/wikipedia/whole/meta_wiki/title_to_id.json',
-        base_vocab_folder + '/wikipedia/best_avg_250.000.json',
+        base_data_folder + '/wikipedia/whole/meta_wiki/title_to_id.json',
+        base_data_folder + '/wikipedia/best_avg_250.000.json',
     )
 
     create_smaller_multi_synonyms_text_file (vocab_folder, meta_folder, func_get_text_from_title_factory=func_get_text_from_title_factory)
 
 if __name__ == '__main__' :
-    main_wikititle(n_best_taken= 100000, overwrite=True)
-    main_wikititle(n_best_taken= 200000, overwrite=True)
+    main_wikititle(n_best_taken= 100000, base_data_folder=test_data_folder, overwrite=True)
+    main_wikititle(n_best_taken= 200000, base_data_folder=test_data_folder, overwrite=True)
     main_wiki_en_create_smaller_multi_synonyms_text_file()
