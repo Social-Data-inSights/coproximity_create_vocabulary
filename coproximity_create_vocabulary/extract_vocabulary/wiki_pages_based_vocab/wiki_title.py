@@ -59,7 +59,7 @@ def factory_create_title_wiki (stop_words , duplicate_stop_words,
     processed_method, synonym_to_ignore,whole_folder, n_best_taken, vocab_folder, 
     plain_article_title_reader, processed_article_file : str, plain_synonyms_reader , processed_syn_file : str ,
     fasttext_file, fasttext_model, use_id_to_title = False,
-    func_get_title_factory : Callable = None,
+    func_get_text_from_title_factory : Callable = None,
     overwrite = False, apply_rewikititle_on_lem=True,
     is_printing_progress: bool = False,
     vocab_additional_filter = [], synonym_additional_filter = []) :
@@ -90,7 +90,7 @@ def factory_create_title_wiki (stop_words , duplicate_stop_words,
     
     use_id_to_title     : if true consider that the wikipedia title csv is made of the wikipedia id and give a id2title_file to create_processed_title
     
-    func_get_title_factory: TODOC replace token2text_file translate_token2text_id
+    func_get_text_from_title_factory: TODOC replace token2text_file translate_token2text_id
 
     overwrite           : try to overwrite the processed files (but reuse the processed elements if they are shared by the old and new files)
     apply_rewikititle_on_lem: if true make sure that the first letter of each token is upper case
@@ -349,8 +349,8 @@ def factory_create_title_wiki (stop_words , duplicate_stop_words,
         after all the synonyms and title are done, create load a fasttext model and get the vector of the titles which share a common synonym
         '''
 
-        if not func_get_title_factory :
-            print('must abort post_process_create_multi_synonym_vecs: no func_get_title_factory')
+        if not func_get_text_from_title_factory :
+            print('must abort post_process_create_multi_synonym_vecs: no func_get_text_from_title_factory')
             return
 
         #load fasttext
@@ -372,7 +372,7 @@ def factory_create_title_wiki (stop_words , duplicate_stop_words,
 
 
         #get the articles of the titles whose share synonyms with others
-        func_get_title = func_get_title_factory()
+        func_get_title = func_get_text_from_title_factory()
         plains = {}
         for art_name in main_articles :
             plain = func_get_title(art_name)
@@ -457,9 +457,9 @@ def get_title_from_dump_factory(index_filename, wiki_filename, temp_filename) :
         ).get(title)
     return get_title_from_dump
 
-def create_smaller_multi_synonyms_text_file (vocab_folder, save_folder, func_get_title_factory) :
+def create_smaller_multi_synonyms_text_file (vocab_folder, save_folder, func_get_text_from_title_factory) :
     '''
-    func_get_title_factory TODOC
+    func_get_text_from_title_factory TODOC
 
     Given a typical Wikipedia Vocabulary folder (created with main_wikititle.py for example) {vocab_folder}, take all the synonyms which redirect to multiple title,
     TODOC and save the result in the {save_folder} as multi_synonyms_text.json
@@ -473,7 +473,7 @@ def create_smaller_multi_synonyms_text_file (vocab_folder, save_folder, func_get
 
 
     #get the articles of the titles whose share synonyms with others
-    func_get_title = func_get_title_factory()
+    func_get_title = func_get_text_from_title_factory()
     plains = {}
     for art_name in main_articles :
         plain = func_get_title(art_name)

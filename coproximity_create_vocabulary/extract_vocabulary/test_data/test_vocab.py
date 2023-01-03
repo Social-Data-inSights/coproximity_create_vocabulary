@@ -33,7 +33,7 @@ for i in range(-4,0) :
     if not os.path.exists(folder) :
         os.mkdir(folder)
 
-translate_token2text_id = None
+func_get_text_from_title_factory = None
 
 _ , _, _, _, _, _, spacy_model, disable_tag = get_french_var()
 n_best_taken = 1000
@@ -82,7 +82,7 @@ for extension, list_select_article, list_select_synonyms in [
                 whole_folder + 'cc.fr.300.bin',
                 'fr',
                 apply_rewikititle_on_lem= not use_lower_processed,
-                func_get_title_factory=translate_token2text_id,
+                func_get_text_from_title_factory=func_get_text_from_title_factory,
                 use_id_to_title=False,
                 overwrite=True,
                 is_printing_progress=False,

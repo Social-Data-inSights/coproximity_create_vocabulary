@@ -1,8 +1,8 @@
 '''
 create the information files for the wikipedia dataset: the title and what to add to the url to get the page (which is also the title).
 '''
-import json
-from ade_imi.data_conf import base_data_folder
+import json, os
+from coproximity_create_vocabulary.data_conf import base_vocab_folder
 
 def create_id2info ( from_id2title_file , to_id2info_file, set_id_file = None ) :
     '''
@@ -32,8 +32,11 @@ def create_id2info ( from_id2title_file , to_id2info_file, set_id_file = None ) 
         json.dump(id2info , f)
 
 if __name__ == "__main__":
-    from_id2title_file  = base_data_folder + 'wikipedia/whole/meta_wiki/id_to_title.json'
-    to_id2info_file = base_data_folder + 'wikipedia/whole/meta_wiki/id_to_info.json'
-    from_id2title_file  = base_data_folder + 'wikipedia_en/whole/meta_wiki/id_to_title.json'
-    to_id2info_file = base_data_folder + 'wikipedia_en/whole/meta_wiki/id_to_info_en.json'
-    create_id2info ( from_id2title_file , to_id2info_file )
+    #example of the use of this script, you need to have run update_wikipedia_dataset on the fr project 
+    test_data_folder = base_vocab_folder + 'test_data/'
+    if not os.path.exists(test_data_folder) :
+        os.mkdir(test_data_folder)
+    from_id2title_file  = test_data_folder + 'wikipedia/whole/meta_wiki/id_to_title.json'
+    to_id2info_file = test_data_folder + 'wikipedia/whole/meta_wiki/id_to_info.json'
+    set_id_file = test_data_folder + 'wikipedia/whole/meta_wiki/best_avg_250.000.json'
+    create_id2info ( from_id2title_file , to_id2info_file, set_id_file )

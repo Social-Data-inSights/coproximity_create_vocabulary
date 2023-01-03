@@ -27,7 +27,7 @@ def main_wikititle(n_best_taken, use_id_to_title=False, overwrite=False, additio
     synonyms_file = whole_folder + 'meta/synonyms.csv'
     processed_syn_file = get_processed_file(synonyms_file, spacy_model, disable_tag, 'csv')
 
-    translate_token2text_id = create_translate_title2text_id_factory(
+    func_get_text_from_title_factory = create_translate_title2text_id_factory(
         base_vocab_folder + '/wikipedia/whole/meta_wiki/title_to_id.json',
         base_vocab_folder + '/wikipedia/best_avg_250.000.json',
     )
@@ -62,7 +62,7 @@ def main_wikititle(n_best_taken, use_id_to_title=False, overwrite=False, additio
                 whole_folder + 'cc.en.300.bin',
                 'en',
                 apply_rewikititle_on_lem= not use_lower_processed,
-                func_get_title_factory=translate_token2text_id,
+                func_get_text_from_title_factory=func_get_text_from_title_factory,
                 use_id_to_title=use_id_to_title,
                 overwrite=overwrite,
                 is_printing_progress=print_progress_info,
@@ -103,12 +103,12 @@ def main_wiki_en_create_smaller_multi_synonyms_text_file() :
     vocab_folder = wiki_title_en_folder+'ngram_title_wiki/wiki_title_%s%s/'%('whole' if n_best_taken is None else 'best_%d'%n_best_taken, new_str)
     meta_folder = wiki_title_en_folder + 'meta/'
 
-    translate_token2text_id = create_translate_title2text_id_factory(
+    func_get_text_from_title_factory = create_translate_title2text_id_factory(
         base_vocab_folder + '/wikipedia/whole/meta_wiki/title_to_id.json',
         base_vocab_folder + '/wikipedia/best_avg_250.000.json',
     )
 
-    create_smaller_multi_synonyms_text_file (vocab_folder, meta_folder, func_get_title_factory=translate_token2text_id)
+    create_smaller_multi_synonyms_text_file (vocab_folder, meta_folder, func_get_text_from_title_factory=func_get_text_from_title_factory)
 
 if __name__ == '__main__' :
     main_wikititle(n_best_taken= 100000, overwrite=True)

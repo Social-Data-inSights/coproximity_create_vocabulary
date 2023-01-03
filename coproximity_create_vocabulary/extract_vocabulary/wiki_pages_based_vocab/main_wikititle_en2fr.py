@@ -172,7 +172,7 @@ if __name__ == '__main__' :
     create_title_en2fr, post_process_en2fr = wikititle_en2fr ()
 
     processed_list_select, processed_method_list, preprocessed_apply_rewikititle_on_lem_list = get_preprocess_args(spacy_model, disable_tag=['parser', 'ner'])
-    translate_token2text_id = create_translate_title2text_id_factory(
+    func_get_text_from_title_factory = create_translate_title2text_id_factory(
         base_vocab_folder + '/wikipedia/whole/meta_wiki/title_to_id.json',
         base_vocab_folder + '/wikipedia/best_avg_250.000.json',
     )
@@ -195,7 +195,7 @@ if __name__ == '__main__' :
         whole_folder + 'cc.en.300.bin',
         'en',
         apply_rewikititle_on_lem= not use_lower_processed,
-        func_get_title_factory=translate_token2text_id,
+        func_get_text_from_title_factory=func_get_text_from_title_factory,
         use_id_to_title=False,
         overwrite=False,
         is_printing_progress=True,

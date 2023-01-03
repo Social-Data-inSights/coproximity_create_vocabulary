@@ -9,7 +9,7 @@ from datetime import datetime
 from multiprocessing import Pool
 from collections import Counter
 
-from coproximity_create_vocabulary.download_wikipedia.get_pages_views.util import download_page
+from coproximity_create_vocabulary.extract_vocabulary.basic_method.util_vocab import download_page
 
 from coproximity_create_vocabulary.data_conf import base_vocab_folder, set_allowed_download_projects
 

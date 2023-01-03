@@ -3,12 +3,11 @@ Get subsets of the whole wikipedia dataset. Split by size or number of views.
 """
 import json , csv , textwrap
 csv.field_size_limit(100000000)
-from ade_imi.data_conf import base_data_folder
+from coproximity_create_vocabulary.data_conf import base_vocab_folder
 
-def get_subset_view_from_json (k:int , base_save : str = base_data_folder + 'wikipedia/best', input_file = base_data_folder + 'wikipedia/whole/fr_wiki_clean.json' , 
-    article_list_file : str = base_data_folder + 'wikipedia/sorted_views_wiki.csv') :
+def get_subset_view_from_json (k:int , base_save : str, input_file, sorted_article_list_file : str) :
     """
-    get the kth most viewed wikipedia articles from a json dump {article_list_file} and will be save in a file
+    get the kth most viewed wikipedia articles from a json dump {sorted_article_list_file} and will be save in a file
     Old version, now use get_subset_view_from_csv
     """
     #load the whole dataset
@@ -17,7 +16,7 @@ def get_subset_view_from_json (k:int , base_save : str = base_data_folder + 'wik
 
     #get the ids of kth the most viewed articles
     article_views = []
-    with open(article_list_file) as f:
+    with open(sorted_article_list_file) as f:
         csv_reader = csv.reader(f, delimiter=';', quotechar='"' )
         next(csv_reader)
         for row in csv_reader :
@@ -35,10 +34,10 @@ def get_subset_view_from_json (k:int , base_save : str = base_data_folder + 'wik
     with open('%s_%s.json'%(base_save , '.'.join(textwrap.wrap(str(k)[::-1] , 3))[::-1]) , 'w') as f:
         json.dump(best_k , f)
 
-def get_subset_view_from_csv (k:int , base_save : str , input_file : str , article_list_file : str, id2title_file: str = None) :
+def get_subset_view_from_csv (k:int , base_save : str , input_file : str , sorted_article_list_file : str, id2title_file: str = None) :
     """
-    get the kth most viewed wikipedia articles from the dump article_list_file and will be save in a file
-    if a {id2title_file} load it and consider the article_list_file contains title and not ids
+    get the kth most viewed wikipedia articles from the csv dump sorted_article_list_file and will be save in a file
+    if a {id2title_file} is given, load it and consider the sorted_article_list_file contains title and not ids
     """
     #load the dict title -> id if some was given
     if id2title_file :
@@ -55,7 +54,7 @@ def get_subset_view_from_csv (k:int , base_save : str , input_file : str , artic
     #get the ids of kth the most viewed articles
     article_views = []
     nb_added = 0
-    with open(article_list_file, encoding='utf8') as f:
+    with open(sorted_article_list_file, encoding='utf8') as f:
         csv_reader = csv.reader(f, delimiter=';', quotechar='"' )
         next(csv_reader)
         for id_or_title,_ in csv_reader :
@@ -91,53 +90,23 @@ def get_subset_view_from_csv (k:int , base_save : str , input_file : str , artic
         json.dump(plain_best_k , f)
 
 
-def get_subset_size (k:int) :
-    """
-    get the kth biggest wikipedia articles from the dump 
-    """
-
-    #load the whole dataset
-    with open(base_data_folder + 'wikipedia/whole/fr_wiki_clean.json') as f:
-        plain = json.load(f)
-
-    #the id of the k biggest articles
-    biggest_id_k = sorted(
-        [ (name_article , len(article)) for name_article , article in plain.items() ] , 
-        key = lambda x : x[1] , reverse = True
-    ) [:k]
-    biggest_id_k = {id_ for id_ , _ in biggest_id_k }
-
-    #get the kth biggest articles
-    biggest_k = {
-        id_ : article
-        for id_ , article in plain.items()
-        if id_ in biggest_id_k
-    }
-
-    #save the result
-    with open(base_data_folder + 'wikipedia/biggest_%s.json'%('.'.join(textwrap.wrap(str(k)[::-1] , 3))[::-1]) , 'w') as f:
-        json.dump(biggest_k , f)
-
-if __name__ == '__main__' :    
-    '''
-    whole_folder = base_data_folder + 'wikipedia/whole/'
-    dump_file = whole_folder + f'wiki_fr_dump.xml.bz2'
-    csv_extracted_file = whole_folder + f'wiki_fr_dump.csv'
-    article_list_file = base_data_folder + 'whole/vocabulary/french/meta/sorted_view_wiki_over_years.csv'
-    id2title_file = base_data_folder + 'whole/vocabulary/french/meta/id2title.json',
-    '''
-
-    whole_folder = base_data_folder + 'wikipedia_en/whole/'
+if __name__ == '__main__' :
+    import os
+    #example of the use of this script, to get a clear view of what is really needed, look at update_wikipedia_dataset
+    test_data_folder = base_vocab_folder + 'test_data/'
+    if not os.path.exists(test_data_folder) :
+        os.mkdir(test_data_folder)
+    whole_folder = test_data_folder + 'wikipedia_en/whole/'
     dump_file = whole_folder + f'wiki_en_dump.xml.bz2'
     csv_extracted_file = whole_folder + f'wiki_en_dump.csv'
-    article_list_file = base_data_folder + 'whole/vocabulary/english/meta/sorted_view_wiki_over_years.csv'
-    id2title_file = base_data_folder + 'whole/vocabulary/english/meta/id2title.json'
+    sorted_article_list_file = test_data_folder + 'whole/vocabulary/english/meta/sorted_view_wiki_over_years.csv'
+    id2title_file = test_data_folder + 'whole/vocabulary/english/meta/id2title.json'
 
     for nb_view in [100, 250000, int(1e6)] :
         get_subset_view_from_csv(
             nb_view, 
             whole_folder + 'best_avg',  
             csv_extracted_file , 
-            article_list_file,
+            sorted_article_list_file,
             id2title_file = id2title_file,
         )

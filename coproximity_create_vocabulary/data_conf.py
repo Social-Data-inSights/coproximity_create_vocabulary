@@ -5,7 +5,7 @@ import os, coproximity_create_vocabulary, argparse
 from pathlib import Path
 
 env_file = str(Path(__file__).parent.absolute().resolve()) + '/.env'
-print('existst, .env', os.path.exists(env_file), env_file)
+
 #change data folder path in the .env file
 if os.path.exists(env_file) :
     from dotenv import load_dotenv

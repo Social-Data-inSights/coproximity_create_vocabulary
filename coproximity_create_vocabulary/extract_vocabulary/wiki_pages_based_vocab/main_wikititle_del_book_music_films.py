@@ -81,7 +81,7 @@ def main_wikititle_del_book_music_films (
     synonyms_file = whole_folder + 'meta/synonyms.csv'
     processed_syn_file = get_processed_file(synonyms_file, spacy_model, disable_tag, 'csv')
 
-    translate_token2text_id = create_translate_title2text_id_factory(
+    func_get_text_from_title_factory = create_translate_title2text_id_factory(
         base_vocab_folder + '/wikipedia/whole/meta_wiki/title_to_id.json',
         base_vocab_folder + '/wikipedia/best_avg_250.000.json'
     )
@@ -118,7 +118,7 @@ def main_wikititle_del_book_music_films (
         whole_folder + 'cc.fr.300.bin',
         'fr',
         apply_rewikititle_on_lem= not use_lower_processed,
-        func_get_title_factory=translate_token2text_id,
+        func_get_text_from_title_factory=func_get_text_from_title_factory,
         use_id_to_title=use_id_to_title,
         overwrite=overwrite,
         is_printing_progress=print_progress_info,

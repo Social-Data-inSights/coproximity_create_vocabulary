@@ -42,7 +42,7 @@ def create_default_wikititle(
     plain_dump_file = whole_folder + f'/dumps/wiki_{project}_dump.xml.bz2'
     plain_index_dump_file = whole_folder + f'/dumps/wiki_{project}_dump_index.xml.bz2'
     temp_dump_file = whole_folder + f'/dumps/wiki_{project}_dump_temp.xml.bz2'
-    func_get_title_factory = lambda : get_title_from_dump_factory(plain_index_dump_file, plain_dump_file, temp_dump_file)
+    func_get_text_from_title_factory = lambda : get_title_from_dump_factory(plain_index_dump_file, plain_dump_file, temp_dump_file)
 
     for use_lower_processed in [False, True] :
         for use_no_accent_processed in [False, True] :
@@ -79,7 +79,7 @@ def create_default_wikititle(
                 whole_folder + 'cc.fr.300.bin',
                 'fr',
                 apply_rewikititle_on_lem= not use_lower_processed,
-                func_get_title_factory=func_get_title_factory,
+                func_get_text_from_title_factory=func_get_text_from_title_factory,
                 overwrite=overwrite,
                 is_printing_progress=print_progress_info,
             )
@@ -124,10 +124,10 @@ def main_wiki_fr_create_smaller_multi_synonyms_text_file(project, wiki_title_fr_
     plain_dump_file = wiki_title_fr_folder + f'/dumps/wiki_{project}_dump.xml.bz2'
     plain_index_dump_file = wiki_title_fr_folder + f'/dumps/wiki_{project}_dump_index.xml.bz2'
     temp_dump_file = wiki_title_fr_folder + f'/dumps/wiki_{project}_dump_temp.xml.bz2'
-    func_get_title_factory = lambda : get_title_from_dump_factory(plain_index_dump_file, plain_dump_file, temp_dump_file)
+    func_get_text_from_title_factory = lambda : get_title_from_dump_factory(plain_index_dump_file, plain_dump_file, temp_dump_file)
 
 
-    create_smaller_multi_synonyms_text_file (vocab_folder, meta_folder, func_get_title_factory)
+    create_smaller_multi_synonyms_text_file (vocab_folder, meta_folder, func_get_text_from_title_factory)
 
 def main_default_wikititle(spacy_model, disable_tag, project, print_progress_info=False, whole_folder :str = default_whole_folder) :
     '''

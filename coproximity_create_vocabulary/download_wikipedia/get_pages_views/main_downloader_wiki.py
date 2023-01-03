@@ -6,7 +6,7 @@ from coproximity_create_vocabulary.data_conf import base_vocab_folder, set_allow
 from coproximity_create_vocabulary.download_wikipedia.get_pages_views.download_synonyms import main_download_synonyms
 from coproximity_create_vocabulary.download_wikipedia.get_pages_views.download_wiki_title import main_download_wiki_title
 
-from coproximity_create_vocabulary.download_wikipedia.get_pages_views.util import download_page
+from coproximity_create_vocabulary.extract_vocabulary.basic_method.util_vocab import download_page
 
 
 def main_downloader_wiki(project, vocab_folder_name, save_parent_folder=base_vocab_folder) :
