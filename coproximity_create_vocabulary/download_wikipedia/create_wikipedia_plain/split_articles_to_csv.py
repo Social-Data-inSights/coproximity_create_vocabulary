@@ -41,6 +41,8 @@ def preprocess_wiki_text (wikitext , threshold_skip_little) :
         return '', True
 
 def get_check_only (get_only_ids, get_only_title, id_, title) :
+    if get_only_ids is None and get_only_ids is None:
+        return True, None, None, False
     if get_only_ids :
         if id_ in get_only_ids :
             get_only_ids.remove(id_)
@@ -60,7 +62,7 @@ def split_articles_to_csv (whole_dir, from_xml_bz2 , dump_save_to, threshold_ski
     dump_save_to: path to where the csv dump will be saved 
     threshold_skip_little: minimum number of words under which an article is discarded from the csv
     what_to_do_result: TODOC
-    get_only_title get_only_ids TODOC
+    get_only_title get_only_ids TODOC if both is None ignore
     is_printing TODOC
     """
     assert what_to_do_result in {'save', 'return_dict_id', 'return_dict_title'}
