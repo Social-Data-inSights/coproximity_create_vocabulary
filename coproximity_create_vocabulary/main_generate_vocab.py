@@ -33,7 +33,7 @@ if __name__ == '__main__' :
     if has_main_args :
         spacy_model = args.spacy_model if args.spacy_model else None
         disable_tag = args.disable_tag.split('_') if args.disable_tag else None
-        main_generate_vocab(args.project, args.vocab_name, save_parent_folder=base_vocab_folder, spacy_model=spacy_model, disable_tag=args.disable_tag)
+        main_generate_vocab(args.project, args.vocab_name, save_parent_folder=base_vocab_folder, spacy_model=spacy_model, disable_tag=disable_tag)
     else :
         #default project values
         for project, vocab_folder_name, spacy_model, disable_tag in [
