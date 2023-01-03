@@ -13,6 +13,8 @@ def main_downloader_wiki(project, vocab_folder_name, save_parent_folder=base_voc
 
     print('start main_downloader_wiki')
     
+    main_download_synonyms(project, vocab_folder_name, save_parent_folder=save_parent_folder)
+    
     plain_dump_file = save_parent_folder + vocab_folder_name + f'/dumps/wiki_{project}_dump.xml.bz2'
     index_dump_file = save_parent_folder + vocab_folder_name + f'/dumps/wiki_{project}_dump_index.xml.bz2'
     download_page(
@@ -24,7 +26,6 @@ def main_downloader_wiki(project, vocab_folder_name, save_parent_folder=base_voc
         f'https://dumps.wikimedia.org/{project}wiki/latest/{project}wiki-latest-pages-articles-multistream-index.txt.bz2'
     )
     
-    main_download_synonyms(project, vocab_folder_name, save_parent_folder=save_parent_folder)
     main_download_wiki_title(
         project, vocab_folder_name, save_parent_folder=save_parent_folder, set_allowed_projects = set_allowed_download_projects,
         use_multiprocessing=True,

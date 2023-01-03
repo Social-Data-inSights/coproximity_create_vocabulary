@@ -1,7 +1,7 @@
 '''
 TODOC
 
-example:  python main_generate_vocab.py --project it --vocab_name italian --spacy_model it_core_news_lg --disable_tag parser_ner
+example:  python main_generate_vocab.py --project it --vocab_name italian --spacy_model it_core_news_lg --disable_tag parser_ner --fasttext_model fr
 '''
 
 import argparse
