@@ -14,7 +14,6 @@ from coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.mai
 
 def main_generate_vocab(project, language_folder, fasttext_model, save_parent_folder=base_vocab_folder, spacy_model = None, disable_tag = None) :
     '''
-    TODOC language_folder -> language_folder
     Creates the main vocabularies from scratch.
 
     project: Wikipedia project from which to extract the data from
