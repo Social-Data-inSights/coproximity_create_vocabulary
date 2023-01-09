@@ -54,7 +54,12 @@ class download_and_save_factory :
         '''
         base_url : base of the url from which the SQL dumps will be saved
         dump_folder : folder in which the results will be saved
-        project, set_allowed_projects: TODOC
+        count_folder: folder containing the count of the project's pages' view
+        project: project (=language) from which we want the counts. Must be in the set {set_allowed_projects} when the dumps were downloaded 
+            (i.e. if this is launched a first time, without the project, you will need to delete the dumps and this class will redownload them)
+        set_allowed_projects: set of the allowed projects, once the dumps are downloaded, only keep the pageviews of those projects. 
+            If {project} was not in this variable when the dumps were downloaded, it will not return any count.
+
         '''
         self.base_url = base_url
         self.dump_folder = dump_folder
@@ -92,7 +97,10 @@ class download_and_save_factory :
 
 def reduce_size_dump(save_filename, reduced_save_filename, set_allowed_projects) :
     '''
-    TODOC
+    reduce the size of the pageview dumps, only keep the project from the set of project {set_allowed_projects}
+
+    save_filename: load the pageview dump from path
+    reduced_save_filename: save the reduced-size pageview dump from path
     '''
     if os.path.exists(reduced_save_filename) :
         return
@@ -135,8 +143,11 @@ def reduce_size_dump(save_filename, reduced_save_filename, set_allowed_projects)
 
 def count_title_id(save_file, count_folder, project) :
     '''
-    Take a SQL dump of the pageviews and transform it into dicts {id: pageview} and {title: pageviews}
-    TODOC project
+    Take a SQL dump of the pageviews, extract the views for the project {project} and transform it into dicts {id: pageview} and {title: pageviews} and save them
+    
+    save_file: the pageview dump from which to extract the counts
+    count_folder: folder in which the json count files will be saved
+    project: project of the pages from which to extract the view counts
     '''    
     id_count_save_file = count_folder + save_file.split('/')[-1].replace('.bz2', '_id_count.json')
     title_count_save_file = count_folder + save_file.split('/')[-1].replace('.bz2', '_title_count.json')
@@ -230,15 +241,27 @@ def get_title_count_sorted(sorted_view_file, dump_folder, begin_month, id2title_
         for word, count in sorted(mean_word.items(), key = lambda x : x[1], reverse=True) :
             writer.writerow((word, count))
 
-def main_download_wiki_title(project, vocab_folder_name, set_allowed_projects=set_allowed_download_projects, begin_month = None, use_multiprocessing = True, save_parent_folder=base_vocab_folder) :
+def main_download_wiki_title(project, language_folder, set_allowed_projects=set_allowed_download_projects, begin_month = None, use_multiprocessing = True, save_parent_folder=base_vocab_folder) :
     '''
-    Download the pageviews by article
+    Download the pageviews by article for the project (=language) {project} and save them.
 
-    TODOC project vocab_folder_name set_allowed_projects
+    The dumps (reduced by size depending on the projects from {set_allowed_projects}) will be saved into "{save_parent_folder}dumps/"
+    The view count by month of the project's pages will be saved into "{save_parent_folder}{language_folder}/count_dump/"
+    
+    and the result, a csv of the sorted list of the articles with its mean views, will be saved in
+        "{save_parent_folder}{language_folder}/meta/sorted_view_wiki_over_years.csv" 
+
+
+    project: project (=language) from which we want the counts. Must be in the set {set_allowed_projects} when the dumps were downloaded 
+        (i.e. if this is launched a first time, without the project, you will need to delete the dumps and this class will redownload them)
+    language_folder: name of the language to extract, will be used as the name of the language folder. 
+    set_allowed_projects: set of the allowed projects, once the dumps are downloaded, only keep the pageviews of those projects. 
+        If {project} was not in this variable when the dumps were downloaded, it will not return any count.
     begin_month: month (as formatted in iter_month) from which to start to get the pageviews
-    use_multiprocessing: if True use multiprocessing
+    use_multiprocessing: if True, speed up using multiprocessing (max 3 threads because of the threshold over Wikipedia downloading)
+    save_parent_folder: parent folder in which all the vocabulary files/folder will be saved/created (vocabulary base folder)
     '''
-    count_folder = save_parent_folder + vocab_folder_name + '/count_dump/'
+    count_folder = save_parent_folder + language_folder + '/count_dump/'
 
     extent_list = count_folder.split('/')
     folder_to_create = ''
@@ -248,7 +271,7 @@ def main_download_wiki_title(project, vocab_folder_name, set_allowed_projects=se
             os.mkdir(folder_to_create)
 
     dump_folder = save_parent_folder + 'dumps/'
-    meta_folder = save_parent_folder + vocab_folder_name + '/meta/'
+    meta_folder = save_parent_folder + language_folder + '/meta/'
     for folder in [dump_folder, meta_folder] :
         if not os.path.exists(folder) :
             os.mkdir(folder)

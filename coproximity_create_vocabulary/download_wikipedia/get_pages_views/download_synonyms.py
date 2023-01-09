@@ -13,12 +13,13 @@ from coproximity_create_vocabulary.data_conf import base_vocab_folder
 
 def get_id2title(project, page_file, id2title_file) :
     '''
-    Get the dictionary: {wikipedia id: wikipedia title} and save it in {id2title_file}.
-    Save the SQL dump in {page_file}. 
-    #Only get the id of Wikipedia pages which namespace are "Main" 
+    Save the SQL dump of the pages of the project {project} and extract from it a dictionary from the main pages' id to their titles 
+    (Only get the id of Wikipedia pages which namespace are "Main" )
     For more details on namespace: https://en.wikipedia.org/wiki/Wikipedia:Namespace
 
-    TODOC project
+    project: project from which to download the page dump and extract the id -> title dictionary
+    id2title_file: save file of the dictionary {wikipedia id: wikipedia title}
+    page_file: save file of the SQL dump
     '''
     download_page(page_file, url = f'https://dumps.wikimedia.org/{project}wiki/latest/{project}wiki-latest-page.sql.gz',)
     
@@ -42,10 +43,15 @@ def get_id2title(project, page_file, id2title_file) :
 
 def get_synonyms(project, id2title, redirect_file, synonym_file) :
     '''
-    Download the redirect from WIkipedia and save it as a dict in {synonym_file}.
-    Use {id2title} which is the result of the previous function to get the redirects as title to title 
-    Save the SQL dump in {redirect_file}
-    TODOC project
+    Download the redirect from WIkipedia's project {project} and use it to create a csv file (whose path is {synonym_file}) which contains tuples synonym, main page.
+        (the separator of the csv is ";")
+    Use {id2title} which is the result of the get_id2title (dictionary {page id: page title}) to get only the synonyms of the main pages.
+
+    project: project from which to download the redirect dump and extract the synonym -> main page dictionary
+    id2title: dict {page id -> ...} or set of id, an synonym must have its main page id in this to be added to the result
+        it is strongly recommended to use the result of get_id2title for this part.
+    redirect_file: save file of the SQL dump
+    synonym_file: csv file in which to save the resulting synonyms
     '''
     download_page(redirect_file, url = f'https://dumps.wikimedia.org/{project}wiki/latest/{project}wiki-latest-redirect.sql.gz',)
 
@@ -65,12 +71,14 @@ def get_synonyms(project, id2title, redirect_file, synonym_file) :
         for from_word, to_word in redirect.items() :
             writer.writerow((from_word, to_word))
 
-def main_download_synonyms(project, vocab_folder_name, save_parent_folder=base_vocab_folder) :
+def main_download_synonyms(project, language_folder, save_parent_folder=base_vocab_folder) :
     '''
-    Download the redirects of Wikipedia articles and the id to title dictionary.
-    project TODOC
+    For a project {project} download the redirects of Wikipedia articles and the id to title dictionary.
+    
+    language_folder: name of the language to extract, will be used as the name of the language folder. 
+    save_parent_folder: parent folder in which all the vocabulary files/folder will be saved/created (vocabulary base folder)
     '''
-    vocab_folder = save_parent_folder + vocab_folder_name + '/'
+    vocab_folder = save_parent_folder + language_folder + '/'
     dump_folder = vocab_folder + 'dumps/'
     page_file = dump_folder + f'{project}wiki-latest-page.sql.gz'
     redirect_file = dump_folder + f'{project}wiki-latest-redirect.sql.gz'

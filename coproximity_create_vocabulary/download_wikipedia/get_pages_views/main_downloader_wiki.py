@@ -1,5 +1,10 @@
 '''
-TODOC
+main file to download and process the wikipedia dumps from wikipedia for creating a vocabulary.
+Create 2 csv:
+    - a list of articles title with the number of time it was viewed sorted descendingly
+    - a list of redirection from a redirection to the main page it redirects to
+
+It also downloads the dumps of Wikipedia to be used to get a text to create a vector representing articles using word2vec.
 '''
 
 from coproximity_create_vocabulary.data_conf import base_vocab_folder, set_allowed_download_projects
@@ -9,14 +14,22 @@ from coproximity_create_vocabulary.download_wikipedia.get_pages_views.download_w
 from coproximity_create_vocabulary.extract_vocabulary.basic_method.util_vocab import download_page
 
 
-def main_downloader_wiki(project, vocab_folder_name, save_parent_folder=base_vocab_folder) :
+def main_downloader_wiki(project, language_folder, save_parent_folder=base_vocab_folder) :
+    '''
+    For a project {project} download and process the wikipedia dumps from wikipedia for creating a vocabulary.
+    
+    language_folder: name of the language to extract, will be used as the name of the language folder. 
+    save_parent_folder: parent folder in which all the vocabulary files/folder will be saved/created (vocabulary base folder)
+    '''
 
     print('start main_downloader_wiki')
     
-    main_download_synonyms(project, vocab_folder_name, save_parent_folder=save_parent_folder)
+    #download and process redirections
+    main_download_synonyms(project, language_folder, save_parent_folder=save_parent_folder)
     
-    plain_dump_file = save_parent_folder + vocab_folder_name + f'/dumps/wiki_{project}_dump.xml.bz2'
-    index_dump_file = save_parent_folder + vocab_folder_name + f'/dumps/wiki_{project}_dump_index.xml.bz2'
+    #download the articles and an index to find them more easily in the dump
+    plain_dump_file = save_parent_folder + language_folder + f'/dumps/wiki_{project}_dump.xml.bz2'
+    index_dump_file = save_parent_folder + language_folder + f'/dumps/wiki_{project}_dump_index.xml.bz2'
     download_page(
         plain_dump_file,
         f'https://dumps.wikimedia.org/{project}wiki/latest/{project}wiki-latest-pages-articles-multistream.xml.bz2'
@@ -26,8 +39,9 @@ def main_downloader_wiki(project, vocab_folder_name, save_parent_folder=base_voc
         f'https://dumps.wikimedia.org/{project}wiki/latest/{project}wiki-latest-pages-articles-multistream-index.txt.bz2'
     )
     
+    #download and process the page views
     main_download_wiki_title(
-        project, vocab_folder_name, save_parent_folder=save_parent_folder, set_allowed_projects = set_allowed_download_projects,
+        project, language_folder, save_parent_folder=save_parent_folder, set_allowed_projects = set_allowed_download_projects,
         use_multiprocessing=True,
     )
     
@@ -36,8 +50,8 @@ def main_downloader_wiki(project, vocab_folder_name, save_parent_folder=base_voc
 
 
 if __name__ == '__main__' :
-    for project, vocab_folder_name in [
+    for project, language_folder in [
         ('fr', 'french'),
         ('en', 'english'),
     ] :
-        main_downloader_wiki(project, vocab_folder_name, save_parent_folder=base_vocab_folder)
+        main_downloader_wiki(project, language_folder, save_parent_folder=base_vocab_folder)

@@ -8,7 +8,7 @@ from coproximity_create_vocabulary.data_conf import base_vocab_folder
 
 from coproximity_create_vocabulary.extract_vocabulary.basic_method.auto_reader_writer import auto_reader
 
-from coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.wiki_title import factory_create_title_wiki, create_translate_title2text_id_factory
+from coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.wiki_title import factory_create_title_wiki, plain_get_text_from_title_factory
 from coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.get_args import get_english_var, get_processed_file, get_preprocess_args
 from coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.util_wiki import unwikititle
 
@@ -168,12 +168,18 @@ def wikititle_en2fr (use_lower_processed = False, use_no_accent_processed = Fals
     return create_title_en2fr, post_process_en2fr
 
 def main_wikititle_en2fr(base_data_folder=test_data_folder) :
+    '''
+    Get the vocabulary that takes the vocabulary and synonyms from the best english pages and their redirections. 
+    And link them to a translation to the french Wikipedia
+
+    base_data_folder: data folder of https://github.com/matthieuDev/Projet_AdE-IMI/ where we will search the Wikipedia articles 
+    '''
     use_lower_processed, use_no_accent_processed = False, False
 
     create_title_en2fr, post_process_en2fr = wikititle_en2fr ()
 
     processed_list_select, processed_method_list, preprocessed_apply_rewikititle_on_lem_list = get_preprocess_args(spacy_model, disable_tag=['parser', 'ner'])
-    func_get_text_from_title_factory = lambda : create_translate_title2text_id_factory(
+    func_get_text_from_title_factory = lambda : plain_get_text_from_title_factory(
         base_data_folder + '/wikipedia/whole/meta_wiki/title_to_id.json',
         base_data_folder + '/wikipedia/best_avg_250.000.json',
     )

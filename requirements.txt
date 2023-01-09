@@ -3,3 +3,4 @@ spacy
 requests
 fasttext
 mwparserfromhell
+python-dotenv

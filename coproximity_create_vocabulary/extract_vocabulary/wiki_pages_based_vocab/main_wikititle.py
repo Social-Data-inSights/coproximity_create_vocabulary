@@ -1,8 +1,10 @@
 '''
+Default method to get the french vocabulary for https://github.com/matthieuDev/Projet_AdE-IMI/. Use the Wikipedia dump created in the
+
 Get the french vocabulary and synonyms from the most viewed wikipedia pages and their redirections
 '''
 from coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.wiki_title import (
-    factory_create_title_wiki, create_translate_title2text_id_factory, create_smaller_multi_synonyms_text_file
+    factory_create_title_wiki, plain_get_text_from_title_factory, create_smaller_multi_synonyms_text_file
 )
 from coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.get_args import get_french_var, get_preprocess_args, get_processed_file
 from coproximity_create_vocabulary.extract_vocabulary.basic_method.create_ngram import create_ngram_framework
@@ -20,12 +22,12 @@ def main_wikititle(
 ) :
     '''
     n_best_taken: size of the vocabulary to create
-    base_data_folder: 
+    base_data_folder: data folder of https://github.com/matthieuDev/Projet_AdE-IMI/ where we will search the Wikipedia articles 
     use_id_to_title: if true consider that the wikipedia title csv is made of the wikipedia id and give a id2title_file to create_processed_title
     overwrite: try to overwrite the processed files (but reuse the processed elements if they are shared by the old and new files)
     additional_folder_name: suffix to add to a folder to change its name, to use to change the name of a vocabulary folder
     print_progress_info:  print the progress of the vocabulary creation, in a stereotyped behavior. Used in electron front to get the progress of the process.
-    whole_folder TODOC
+    whole_folder: french vocabulary folder
     '''
 
     
@@ -38,7 +40,7 @@ def main_wikititle(
     synonyms_file = whole_folder + 'meta/synonyms.csv'
     processed_syn_file = get_processed_file(synonyms_file, spacy_model, disable_tag, 'csv')
 
-    func_get_text_from_title_factory = lambda : create_translate_title2text_id_factory(
+    func_get_text_from_title_factory = lambda : plain_get_text_from_title_factory(
         base_data_folder + '/wikipedia/whole/meta_wiki/title_to_id.json',
         base_data_folder + '/wikipedia/best_avg_250.000.json',
     )
@@ -115,7 +117,7 @@ def main_wiki_fr_create_smaller_multi_synonyms_text_file(wiki_title_fr_folder=de
     vocab_folder = wiki_title_fr_folder+'ngram_title_wiki/wiki_title_%s%s/'%('whole' if n_best_taken is None else 'best_%d'%n_best_taken, new_str)
     meta_folder = wiki_title_fr_folder + 'meta/'
 
-    func_get_text_from_title_factory = lambda : create_translate_title2text_id_factory(
+    func_get_text_from_title_factory = lambda : plain_get_text_from_title_factory(
         base_data_folder + '/wikipedia/whole/meta_wiki/title_to_id.json',
         base_data_folder + '/wikipedia/best_avg_250.000.json',
     )

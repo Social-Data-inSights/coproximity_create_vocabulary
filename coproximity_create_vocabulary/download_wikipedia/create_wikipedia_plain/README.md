@@ -1,4 +1,4 @@
-# wiki_to_plain
+# create_wikipedia_plain
 
 Download the dump from wikipedia and create from it a json files containing all the articles containing enough words. Also allow to take a subset of this plain file.
 

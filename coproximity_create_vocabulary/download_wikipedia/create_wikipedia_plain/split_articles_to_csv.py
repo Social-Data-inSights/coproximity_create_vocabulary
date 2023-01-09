@@ -55,15 +55,20 @@ def get_check_only (get_only_ids, get_only_title, id_, title) :
 
 def split_articles_to_csv (whole_dir, from_xml_bz2 , dump_save_to, threshold_skip_little = 100, what_to_do_result = 'save', get_only_ids = None, get_only_title = None, is_printing=True) :
     """
-    Take the file path {from_xml_bz2} to the bz2 compressed Wikipedia dump and creates a csv of the plain text of the articles.
+    Take the file path {from_xml_bz2} to the bz2 compressed Wikipedia dump and extract the plain text of the articles.
 
     whole_dir: folder in which will be created the meta folder, in which will be saved the information of the articles.
     from_xml_bz2: wikipedia dump from which to extract the 
     dump_save_to: path to where the csv dump will be saved 
     threshold_skip_little: minimum number of words under which an article is discarded from the csv
-    what_to_do_result: TODOC
-    get_only_title get_only_ids TODOC if both is None ignore
-    is_printing TODOC
+    what_to_do_result: what to do with the extracted plain text:
+        save: save the result as a file. Creates a csv of the id and the content using '|' as a delimiter, and json files: dictionary from the ids to the titles,
+            dictionary of redirections, list of the skipped articles, list of the extracted ids
+        return_dict_id: return the results as a dictionary { article id: article content}
+        return_dict_title: return the results as a dictionary { article title: article content}
+    get_only_title: a set of article title to get. If an article has not a title in this set it is ignored. If you don't want to filter based on titles, set this as None.
+    get_only_ids: a set of article ids to get. If an article has not a id in this set it is ignored. If you don't want to filter based on ids, set this as None.
+    is_printing: is True, print information about the evolution of the extraction
     """
     assert what_to_do_result in {'save', 'return_dict_id', 'return_dict_title'}
 

@@ -90,7 +90,11 @@ def factory_create_title_wiki (stop_words , duplicate_stop_words,
     
     use_id_to_title     : if true consider that the wikipedia title csv is made of the wikipedia id and give a id2title_file to create_processed_title
     
-    func_get_text_from_title_factory: TODOC replace token2text_file translate_token2text_id
+    func_get_text_from_title_factory: method taking no argument and returning a method that takes a token and return an associated text.
+        Typically this used take a wikipedia title and return the content of its article.
+        It is used to create the wor2vec for the main articles which have synonyms linking to multiple main article. They will be used to chose
+            which main article will such synonyms will be replaced by.
+        (this a method of a method so that we can load things but don't need to keep it in memory during the pipeline) 
 
     overwrite           : try to overwrite the processed files (but reuse the processed elements if they are shared by the old and new files)
     apply_rewikititle_on_lem: if true make sure that the first letter of each token is upper case
@@ -389,12 +393,15 @@ def factory_create_title_wiki (stop_words , duplicate_stop_words,
 
     return preprocess_wiki, create_vocabulary_wiki, create_synonyms, process_all, post_process_create_multi_synonym_vecs
 
-def create_translate_title2text_id_factory(title2id_file, token2text_file) :
+def plain_get_text_from_title_factory(title2id_file, token2text_file) :
     '''
-    token2text_file TODOC 
+    Method used in the "with data project mains" to get the text for Wikipedia titles.
+    Given a path to a json containing {Wikipedia id (or title): text} ,
+    create a method that takes in a title and return the text of its article
 
-    load the dict {Wikipedia title: Wikipedia id} from the path {title2id_file}, clean the titles
-    and create a method that takes in a title and return its associated id if it exists
+    title2id_file: if some is given, link to a json of a dict {Wikipedia title: Wikipedia id}, and we consider that {token2text_file} contains
+            Wikipedia ids and we use this to get the translate from  id to title
+        if none is given, we consider that {token2text_file} contains Wikipedia titles
     '''
     if title2id_file :
         with open(title2id_file) as f :
@@ -459,10 +466,16 @@ def get_title_from_dump_factory(index_filename, wiki_filename, temp_filename) :
 
 def create_smaller_multi_synonyms_text_file (vocab_folder, save_folder, func_get_text_from_title_factory) :
     '''
-    func_get_text_from_title_factory TODOC
+    Given a typical Wikipedia Vocabulary folder (created with main_wikititle.py for example) {vocab_folder}, take all the synonyms which redirect to multiple tokens. 
+        And create for those tokens a dictionary : {token: text representation} (ex: {article title: article content })
 
-    Given a typical Wikipedia Vocabulary folder (created with main_wikititle.py for example) {vocab_folder}, take all the synonyms which redirect to multiple title,
-    TODOC and save the result in the {save_folder} as multi_synonyms_text.json
+    vocab_folder: vocabulary folder from which to extract the list of tokesn from which to save the text
+    save_folder: folder in which to save the result
+    func_get_text_from_title_factory: method taking no argument and returning a method that takes a token and return an associated text.
+        Typically this used take a wikipedia title and return the content of its article.
+        It is used to create the wor2vec for the main articles which have synonyms linking to multiple main article. They will be used to chose
+            which main article will such synonyms will be replaced by.
+        (this a method of a method so that we can load things but don't need to keep it in memory during the pipeline) 
 
     '''
     with open(vocab_folder + 'multiple_synonyms.json') as f :
