@@ -31,7 +31,7 @@ def compare_synonyms(vocab_folder_a, vocab_folder_b) :
 def compare_main_dict_vocab(main_dict_vocab_a, main_dict_vocab_b) :
     '''
     Compare main dict vocab of the 2 vocabulary contained in the folder {main_dict_vocab_a} and {main_dict_vocab_b}
-    (set of tokens and synonyms)
+    (compare both set of tokens and synonyms)
     ''' 
     main_dict_vocab_list = []
     for main_dict_vocab_file in [main_dict_vocab_a, main_dict_vocab_b] :

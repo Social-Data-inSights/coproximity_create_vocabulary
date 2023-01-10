@@ -2,9 +2,9 @@
 Iterate over and write different type of extension. 
 
 For now there are 3 extensions :
-- .csv: csv files of 2 columns: article id , their contents Their default arguments are delimiter=';' and default quotechar='"'
-- .json : dictionary or list of a json file. By default consider the json as {article id: theirs contents}
-- .jsons: file containing for each line a json. By default consider each line to be [article id, their contents]
+- .csv: csv files. By default the csv is considered as having of 2 columns: article id , their contents Their default arguments are delimiter=';' and default quotechar='"'
+- .json : dictionary or list of a json file. By default considered the json as {article id: theirs contents}
+- .jsons: file containing for each line a json. By default considered each line to be [article id, their contents]
 
 To use the readers, you only need to iterate on them and close them at the end.
 
@@ -123,7 +123,7 @@ class read_json :
                 If the elements of the iteration are lists, should be a list of indexes (+ 2 special values)
                 If the elements of the iteration are dicts, should be a list of index names of the dicts (+ 2 special values)
                 If the elements of the iteration are strings, should be one of the special values
-            If none is given, read all the values (and the index if is a dict) at each iteration
+            If none is given, read all the values and the index(for a list this the position of the element in the list) at each iteration
         '''
         self.filepath = filepath
         self.list_select = list_select
@@ -182,8 +182,8 @@ class read_jsons :
         filepath: path of the jsons file to load
         list_select: list of the elements to read from each iteration. 
             Depending on the elements to iterate on, you should give it a different format
-                If the elements of the iteration are lists, should be a list of indexes (+ 2 special values)
-                If the elements of the iteration are dicts, should be a list of index names of the dicts (+ 2 special values)
+                If the elements of the iteration are lists, should be a list of indexes
+                If the elements of the iteration are dicts, should be a list of index names of the dicts
             If none is given read the whole line at each iteration
         '''
         self.filepath = filepath
@@ -228,6 +228,7 @@ def auto_writer(filepath, list_select=None, open_mode='w', csv_args= dict(delimi
     takes a path to a file {filepath} and some arguments {args}. Choose automatically the writer based on the file extension 
     and return it initialized with the arguments {args}.
     Also take an mode for  the open file {open_mode}, should be either 'a' (append) or 'w' (write)
+    You need to close the writer to be sure the result is really saved.
 
     list_select: List of the names of the elements to write, for more details see the specifics class
     csv_args: used only if writing a csv, args to give to the csv.reader , mostly set the delimiter and the quote character (quotechar)

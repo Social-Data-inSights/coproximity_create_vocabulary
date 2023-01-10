@@ -19,14 +19,4 @@ Get subsets of the whole wikipedia dataset. Split by size or number of views.
 
 ### update_wikipedia_dataset.py
 
-Update the wikipedia dataset by downloading the most recent wikipedia dump and recreating the plain wikipedia files
-
-
-## folder 
-
-### alt_methods
-
-Old methods, not used anymore but which can be useful one day.
-
-## Notes
-16807.xml was manually deleted from the file to parse because pandox was blocking on it
+Main file. Update the wikipedia dataset by downloading the most recent wikipedia dump and recreating the plain wikipedia files.

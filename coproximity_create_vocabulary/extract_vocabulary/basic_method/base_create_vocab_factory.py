@@ -69,7 +69,7 @@ def create_preprocess_list_words_factory (preprocess_method, processed_list_sele
     '''
     def create_preprocess_list_words (csv_word_reader , id2token_file, save_file, overwrite=False, is_printing_progress = False,) :
         '''
-        method which take an iterator {csv_word_reader} which return at each iteration iteration a tuple (token, score), apply the {process_method} to the token
+        method which take an iterator {csv_word_reader} which return at each iteration iteration a tuple (token, score), apply the {preprocess_method} to the token
         and save them in {save_file} as a csv with column's name {processed_list_select}
         process_method can return multiple results, for multiple processed elements
 

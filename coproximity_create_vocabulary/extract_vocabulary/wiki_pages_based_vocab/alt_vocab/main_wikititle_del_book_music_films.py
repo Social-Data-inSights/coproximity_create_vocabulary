@@ -69,7 +69,7 @@ def main_wikititle_del_book_music_films (
     use_lower_processed: if true, the processing sets the result as lowercase
     use_no_accent_processed: if true, the processing deletes the accents
     '''
-    categories_folder = base_vocab_folder + 'whole/vocabulary/french/categories/'
+    categories_folder = base_vocab_folder + 'french/categories/'
     wiki_title2categories_file = categories_folder + 'title2categories.json'
     black_list_category_file = categories_folder + 'all_trimmed_flatten_set_categories.json'
 

@@ -1,5 +1,5 @@
 '''
-Transform the expected result of create_ngram into a more usefull format for the ngram extraction.
+Transform the expected result of create_ngram into a more useful format for the ngram extraction.
 Get the processed synonyms and processed ngrams to the ngrams they represent for every ngram in the vocabulary, filter out ngrams which are too big, 
 group the remainder by their numbers of words, sort it in descending order.  
 '''
@@ -31,7 +31,7 @@ def get_list_vocab(main_dict_vocab, max_ngram, multiple_synonym_file=None) :
     {'token to detect': 
         [
             [list of the processed words of the token], 
-            [lists of list [word, its vector representation]], 
+            [lists of list [main word, its vector representation]], 
             number of word of the token,
         ]
     }  

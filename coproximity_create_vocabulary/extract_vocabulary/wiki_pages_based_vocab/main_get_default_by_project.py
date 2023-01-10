@@ -27,7 +27,7 @@ def create_default_wikititle(
     project: name of the project from comes the articles
     overwrite: try to overwrite the processed files (but reuse the processed elements if they are shared by the old and new files)
     print_progress_info:  print the progress of the vocabulary creation, in a stereotyped behavior. Used in electron front to get the progress of the process.
-    whole_folder: parent vocabulary folder where the data will be saved
+    whole_folder: language folder where the data will be saved
     '''
 
     

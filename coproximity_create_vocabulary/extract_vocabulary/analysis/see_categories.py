@@ -5,12 +5,12 @@ Get the categories of a Wikipedia article
 import json, sys
 from coproximity_create_vocabulary.data_conf import base_vocab_folder
 
-categories_folder = base_vocab_folder + 'whole/vocabulary/french/categories/'
+categories_folder = base_vocab_folder + 'french/categories/'
 
 def get_title(title, black_list_file = None) :
     '''
     get the categories of a an article whose title is {title}
-    if  a set of categories {black_list_file} is given, return only the categories which are in both this set and the categories of {title}
+    if  a set of categories {black_list_file} is given, return only categories which are not in this set
     '''
     with open(categories_folder + 'title2categories.json', encoding='utf8') as f :
         title2categories = json.load(f)

@@ -66,14 +66,14 @@ def get_categories_from_xml (from_xml , id2categories_filename, title2categories
 
                     counter += 1
                     state = IN_HEADER
-                #if we leave an artiacle without being into one or without any line between the beginning and end, we consider that there is a problem  
+                #if we leave an article without being into one or without any line between the beginning and end, we consider that there is a problem  
                 if '</page>' in line :
                     print ('line')
                     raise Exception('article open before the one before being closed')
 
             ################## IN_HEADER ##################
             elif state == IN_HEADER :
-                #if we are on the balise for the title or id, save its value
+                #if we are on a title or id tag, save its value
                 if '<title>' in line :
                     page_title = re.findall("<title>(.*)</title>", line)[0]
                 if '<id>' in line :

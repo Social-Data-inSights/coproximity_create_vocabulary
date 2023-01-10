@@ -76,7 +76,7 @@ def factory_create_title_wiki (stop_words , duplicate_stop_words,
     processed_method    : methods that takes a string and return its processed version
         (in the main methods this means lemmatized (and maybe cast as lower case and without accent))
     synonym_to_ignore   : List of synonym not to keep
-    whole_folder        : parent folder of the current vocabulary folder. Use to get the id2title TODO replace this by id2title_file
+    whole_folder        : language folder. Use to get the id2title TODO replace this by id2title_file
     n_best_taken        : Number of word to keep in the vocabulary  
     vocab_folder        : path to the folder where the results will be saved
     
@@ -332,6 +332,7 @@ def factory_create_title_wiki (stop_words , duplicate_stop_words,
             if not unwiki_title in main_dict_vocab :
                 main_dict_vocab[unwiki_title] = (lem_title,syn,count)
             elif title[0].isupper():
+                #TODO this should not happen, check what's wrong (not really a problem, but cleaner)
                 has_double.append([unwiki_title , (lem_title,syn,count) , main_dict_vocab[unwiki_title]])
         to_save.append(('has_double.json', has_double))
 

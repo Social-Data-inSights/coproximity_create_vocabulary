@@ -1,6 +1,7 @@
 '''
 Download the subcategories by recursively requesting them to Wikipedia. Based on the structure of subcategories from the Wikipedia categories. 
 (ex: section "Sous-catégories" from https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Cin%C3%A9ma)
+Tuned only for french, but can be a base for other languages.
 '''
 
 import requests, urllib, os, json
@@ -17,7 +18,7 @@ url_base = 'https://fr.wikipedia.org/w/api.php?action=categorytree&format=json&c
 
 def download_recursive_categories (wiki_page_name, depth, max_depth, already_done= set(), url_base=url_base) :
     '''
-    Download recursively the subcategories of the page {wiki_page_name}. If a {max_depth} is given, stop at depth {max_depth}.
+    Download recursively the subcategories of the page {wiki_page_name}. If a {max_depth} is given, stop recursion at depth {max_depth}.
 
     wiki_page_name : page from which to get the subcategories
     depth: current depth from the first query
@@ -134,7 +135,7 @@ def flatten_all_wiki_subcategories (category_name2save_files, category2all_actio
 def reccursive_trim_categories(categories, to_trim_vocab):
     '''
     take {categories}, a result of one of the download_all_categories and  a list of string {to_trim_vocab}.
-    If onw of the string of {to_trim_vocab} is in a category of {categories}, delete from {categories} this category and all its subcategories.
+    If one of the string of {to_trim_vocab} is in a category of {categories}, delete it from {categories} with all its subcategories.
     '''
     res = []
     for category, rec_categories in categories:
@@ -226,7 +227,7 @@ if __name__ == '__main__' :
             'compositrice', 'compositeur', 'histoire', 'industrie', 'lieu', 'musicologie', 'culture', 'technique' , 'théorie', 'musicien', 'rappeur',
             'chanteur', 'chanteuse', 'artiste', 'musicien', 'narrateur', 'lauréat', 'élève',
         ],
-        #diaspora include anti-sémitisme
+        #diaspora include anti-sémitisme (this  is not a political statement, but an example of what is lost if we ignore diaspora in the vocabulary)
         'Personne':['fiction', 'ville', 'série', 'film', 's\u00e9rie', 'adaptation', 'catégorie:catégorie', 'nommé', 'diaspora', 'autobiograp'],
     }
     for cat_name, to_trim_vocab in delete_categories_over_reach.items():

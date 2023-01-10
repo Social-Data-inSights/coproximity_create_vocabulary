@@ -81,7 +81,6 @@ def create_ngram_framework (
     #save processed version of the vocabulary and vocabulary
     save_all(to_save + [
         ('set_tokens.json' , list(sorted(set_tokens))) ,
-        ('set_tokens_processed_dict.json' , processed_dict) ,
     ], vocab_folder)
     del to_save
 
@@ -131,25 +130,7 @@ def create_ngram_framework (
         if syn_to
     }
 
-    #get the list of synonyms if every letter were lowered
-    simplified_synonym = {}
-    for syn_from , syn_to in synonyms.items() :
-        syn_to_lower = syn_from.lower()
-        if syn_to and syn_from != syn_to_lower :
-            if not syn_to_lower in simplified_synonym :
-                simplified_synonym[syn_to_lower] = set()
-            simplified_synonym[syn_to_lower].add(syn_to)
-
-    list_simplified_synonym =[]
-    for syn_from , syns in simplified_synonym.items() :
-        for syn_to in syns :
-            list_simplified_synonym.append((syn_from,syn_to))
-
-    save_all([
-        ('main_dict_vocab.json' , main_dict_vocab) ,
-        ('synonyms.json' , synonyms) ,
-        ('simplified_synonym.json' , list_simplified_synonym),
-    ], vocab_folder)
+    save_all([('synonyms.json' , synonyms)], vocab_folder)
 
     if is_printing_progress :
         print('INFO_PRINT:simplify main_dict_vocab:end', flush=True)

@@ -50,20 +50,17 @@ class download_and_save_factory :
     '''
     class used to download and save the pageviews by month
     '''
-    def __init__ (self, base_url, dump_folder, count_folder, project, set_allowed_projects) :
+    def __init__ (self, base_url, dump_folder, project, set_allowed_projects) :
         '''
         base_url : base of the url from which the SQL dumps will be saved
         dump_folder : folder in which the results will be saved
-        count_folder: folder containing the count of the project's pages' view
         project: project (=language) from which we want the counts. Must be in the set {set_allowed_projects} when the dumps were downloaded 
             (i.e. if this is launched a first time, without the project, you will need to delete the dumps and this class will redownload them)
         set_allowed_projects: set of the allowed projects, once the dumps are downloaded, only keep the pageviews of those projects. 
             If {project} was not in this variable when the dumps were downloaded, it will not return any count.
-
         '''
         self.base_url = base_url
         self.dump_folder = dump_folder
-        self.count_folder = count_folder
         self.project = project
         self.set_allowed_projects = set_allowed_projects
         
@@ -74,14 +71,8 @@ class download_and_save_factory :
         '''
         it_year, it_month = it_year_month
         dump_name = 'pageviews-%d%02d-user.bz2' % (it_year, it_month)
-        id_count_save_file = dump_name.replace('.bz2', '_id_count.json')
-        title_count_save_file = dump_name.replace('.bz2', '_title_count.json')
 
         print(dump_name, 'start')
-        #if we already got the pageviews extracted from the SQL dump, we don't need to download it again
-        if os.path.exists(self.dump_folder + id_count_save_file) and os.path.exists(self.dump_folder + title_count_save_file) :
-            print(dump_name, 'count: already done')
-            return
         
         save_filename = self.dump_folder + dump_name
         reduced_save_filename = save_filename.replace('.bz2', '_reduce.bz2')
@@ -93,7 +84,6 @@ class download_and_save_factory :
             print(dump_name, 'done')
 
         reduce_size_dump(save_filename, reduced_save_filename, self.set_allowed_projects)
-        count_title_id(reduced_save_filename, self.count_folder, self.project, )
 
 def reduce_size_dump(save_filename, reduced_save_filename, set_allowed_projects) :
     '''
@@ -110,85 +100,46 @@ def reduce_size_dump(save_filename, reduced_save_filename, set_allowed_projects)
 
     counter = Counter()
 
-    with bz2.open( save_filename) as f_in  :
-        with bz2.open( reduced_save_filename, 'w') as f_out  :
-            for line in f_in :
-                line = line.strip().split(b' ')
-                project_type = line[0].split(b'.')
-                if len(line) == 6 and len(project_type) == 2 and project_type[0] and project_type[1] == b'wikipedia' and line[2] != b'null':
-                    project, typ = project_type
-                    
-                    if count_project != project :
-                        assert not project in already_project
-                        if counter :
-                            f_out.write(b'\n'.join(
-                                b'%b %b %b %i'%(count_project, title, id_, count) 
-                                for (title, id_), count in counter.items() )
-                            )
+    try :
+        with bz2.open( save_filename) as f_in  :
+            with bz2.open( reduced_save_filename, 'w') as f_out  :
+                for line in f_in :
+                    line = line.strip().split(b' ')
+                    project_type = line[0].split(b'.')
+                    if len(line) == 6 and len(project_type) == 2 and project_type[0] and project_type[1] == b'wikipedia' and line[2] != b'null':
+                        project, typ = project_type
+                        
+                        if count_project != project :
+                            assert not project in already_project
+                            if counter :
+                                f_out.write(b'\n'.join(
+                                    b'%b %b %b %i'%(count_project, title, id_, count) 
+                                    for (title, id_), count in counter.items() )
+                                )
 
-                        already_project.add(project)
-                        counter = Counter()
-                        count_project = project
-                        
-                    if project in set_allowed_projects :
-                        counter[(line[1], line[2])] += int(line[4])
-                        
-            if counter:
-                f_out.write(b'\n'.join(
-                    b'%b %b %b %i'%(count_project, title, id_, count) 
-                    for (id_, title), count in counter.items() )
-                )
+                            already_project.add(project)
+                            counter = Counter()
+                            count_project = project
+                            
+                        if project in set_allowed_projects :
+                            counter[(line[1], line[2])] += int(line[4])
+                            
+                if counter:
+                    f_out.write(b'\n'.join(
+                        b'%b %b %b %i'%(count_project, title, id_, count) 
+                        for (id_, title), count in counter.items() )
+                    )
+    except OSError:
+        print('could not load', save_filename)
     os.remove(save_filename)
 
-
-def count_title_id(save_file, count_folder, project) :
+def get_title_count_sorted(sorted_view_file, dump_folder, project, begin_month, id2title_file, synonyms_file) :
     '''
-    Take a SQL dump of the pageviews, extract the views for the project {project} and transform it into dicts {id: pageview} and {title: pageviews} and save them
-    
-    save_file: the pageview dump from which to extract the counts
-    count_folder: folder in which the json count files will be saved
-    project: project of the pages from which to extract the view counts
-    '''    
-    id_count_save_file = count_folder + save_file.split('/')[-1].replace('.bz2', '_id_count.json')
-    title_count_save_file = count_folder + save_file.split('/')[-1].replace('.bz2', '_title_count.json')
-
-    if os.path.exists(id_count_save_file) and os.path.exists(title_count_save_file) :
-        print(save_file.split('/')[-1], 'done')
-        return
-
-    print(save_file.split('/')[-1],'start')
-
-    #pageviews are SQL dumps, but it is faster to directly parse it by reading which values were supposed to be inserted.
-    id_count = Counter()
-    title_count = Counter()
-    string_byte = project.encode('utf8')
-    with bz2.open( save_file) as f  :
-        for line in f :
-            if line.strip() and line.startswith(string_byte) :
-                line = line.decode('utf-8').strip().split(' ')
-
-                if len(line) == 4 :
-                    count, title, id_, count = line
-                    title_count[title] += int(count)
-                    id_count[id_] += int(count)
-                else :
-                    print('reduced count line != 4', line)
-                
-    with open(id_count_save_file, 'w', encoding='utf8') as f :
-        json.dump(dict(id_count), f)
-    with open(title_count_save_file, 'w', encoding='utf8') as f :
-        json.dump(dict(title_count), f)
-
-    print(save_file.split('/')[-1],'done')
-
-def get_title_count_sorted(sorted_view_file, dump_folder, begin_month, id2title_file, synonyms_file) :
-    '''
-    Prerequisite: Need to have downloaded the pageviews by month and have applied count_title_id on them
-
-    Take the folder {dump_folder} in which the pageviews were saved and merge them by getting the mean views over the years where the page existed
+    Take the folder {dump_folder} in which the pageview dumps were saved and merge them by getting the mean views over the years where the page existed
     (i.e. if a page was created in 2018, if that page has X cumulated pageview and if we are currently in 2022, its merge score is X / (2022-2018))
 
     sorted_view_file: file into which toi save the result
+    project: project of the pages from which to extract the view counts
     begin_month: month (as formatted in iter_month) from which to start to get the pageviews
     id2title_file: file containing the dictionary {wikipedia id: wikipedia title} of all main pages. Used to filter pages whose namespaces are not "Main"
     synonyms_file: file containing the redirects, used to merge the redirect pageview to their main pages
@@ -216,9 +167,22 @@ def get_title_count_sorted(sorted_view_file, dump_folder, begin_month, id2title_
             nb_word_by_year.update(curr_year_set_word)
             curr_year_set_word = set()
         
-        title_file = dump_folder + 'pageviews-%d%02d-user_reduce_title_count.json' % (it_year, it_month)
-        with open(title_file, encoding='utf8') as f :
-            curr_title_count = json.load(f)
+        count_file = dump_folder + 'pageviews-%d%02d-user_reduce.bz2' % (it_year, it_month)
+
+        #get the title count from the SQL dumps
+        string_byte = project.encode('utf8')
+        curr_title_count = Counter()
+        with bz2.open(count_file) as f  :
+            for line in f :
+                if line.strip() and line.startswith(string_byte) :
+                    line = line.decode('utf-8').strip().split(' ')
+
+                    if len(line) == 4 :
+                        count, title, id_, count = line
+                        curr_title_count[title] += int(count)
+                    else :
+                        print('reduced count line != 4', line)
+
         #filter the non main pages and cast the count as int
         curr_title_count = { title: int(count) for title, count in curr_title_count.items() if title in set_titles }
         #update the cumulative pageviews
@@ -245,9 +209,7 @@ def main_download_wiki_title(project, language_folder, set_allowed_projects=set_
     '''
     Download the pageviews by article for the project (=language) {project} and save them.
 
-    The dumps (reduced by size depending on the projects from {set_allowed_projects}) will be saved into "{save_parent_folder}dumps/"
-    The view count by month of the project's pages will be saved into "{save_parent_folder}{language_folder}/count_dump/"
-    
+    The dumps (reduced by size depending on the projects from {set_allowed_projects}) will be saved into "{save_parent_folder}dumps/"    
     and the result, a csv of the sorted list of the articles with its mean views, will be saved in
         "{save_parent_folder}{language_folder}/meta/sorted_view_wiki_over_years.csv" 
 
@@ -279,8 +241,9 @@ def main_download_wiki_title(project, language_folder, set_allowed_projects=set_
     id2title_file = meta_folder + 'id2title.json'
     synonyms_file = meta_folder + 'synonyms.csv'
 
+    #download the views
     base_url = 'https://dumps.wikimedia.org/other/pageview_complete/monthly/'
-    downloader_and_saver = download_and_save_factory(base_url, dump_folder, count_folder, project, set_allowed_projects)
+    downloader_and_saver = download_and_save_factory(base_url, dump_folder, project, set_allowed_projects)
     
     if use_multiprocessing :
         with Pool(3) as p:
@@ -289,7 +252,8 @@ def main_download_wiki_title(project, language_folder, set_allowed_projects=set_
         for it_year_month in iter_month(begin_month) :
             downloader_and_saver.download_and_save(it_year_month)
 
-    get_title_count_sorted(sorted_view_file, count_folder, begin_month, id2title_file, synonyms_file)
+    #merge the views
+    get_title_count_sorted(sorted_view_file, dump_folder, project, begin_month, id2title_file, synonyms_file)
 
 if __name__ == '__main__' : 
     main_download_wiki_title(begin_month = (2016, 1))

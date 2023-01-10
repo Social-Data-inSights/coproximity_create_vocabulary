@@ -41,6 +41,10 @@ def preprocess_wiki_text (wikitext , threshold_skip_little) :
         return '', True
 
 def get_check_only (get_only_ids, get_only_title, id_, title) :
+    '''
+    Given  {get_only_ids}, {get_only_title} a set of articles to keep or nothing if we need to keep everything, 
+    return the boolean "is the article ok", the updated sets (we delete the articles if we find them in the sets) and a boolean "should we stop" (if sets were given and it is now empty) 
+    '''
     if get_only_ids is None and get_only_ids is None:
         return True, None, None, False
     if get_only_ids :
@@ -58,7 +62,7 @@ def split_articles_to_csv (whole_dir, from_xml_bz2 , dump_save_to, threshold_ski
     Take the file path {from_xml_bz2} to the bz2 compressed Wikipedia dump and extract the plain text of the articles.
 
     whole_dir: folder in which will be created the meta folder, in which will be saved the information of the articles.
-    from_xml_bz2: wikipedia dump from which to extract the 
+    from_xml_bz2: wikipedia dump from which to extract the articles
     dump_save_to: path to where the csv dump will be saved 
     threshold_skip_little: minimum number of words under which an article is discarded from the csv
     what_to_do_result: what to do with the extracted plain text:
@@ -72,14 +76,14 @@ def split_articles_to_csv (whole_dir, from_xml_bz2 , dump_save_to, threshold_ski
     """
     assert what_to_do_result in {'save', 'return_dict_id', 'return_dict_title'}
 
-    # direction of the important file and folder
+    # folder in which to save the information about the extraction if what_to_do_result == 'save'
     meta_dir = whole_dir + '/meta_wiki'
 
     #create the folder if it does not exists
     if not os.path.exists(meta_dir) :
         os.mkdir(meta_dir)
 
-    #state for where on the article we are
+    #state of the article extraction
     #outside any article
     OUT_ARTICLE = 0
     #in the header where there is the id and name
@@ -141,14 +145,14 @@ def split_articles_to_csv (whole_dir, from_xml_bz2 , dump_save_to, threshold_ski
                         
                     counter += 1
                     state = IN_HEADER
-                #if we leave an artiacle without being into one or without any line between the beginning and end, we consider that there is a problem  
+                #if we leave an article without being into one or without any line between the beginning and end, we consider that there is a problem  
                 if '</page>' in line :
                     print ('line')
                     raise Exception('article open before the one before being closed')
             
             ################## IN_HEADER ##################
             elif state == IN_HEADER :
-                #if we are on the balise for the title or id, save its value
+                #if we are in a title or id tag, save its value
                 if '<title>' in line :
                     page_title = re.findall("<title>(.*)</title>", line)[0]
                 if '<id>' in line :

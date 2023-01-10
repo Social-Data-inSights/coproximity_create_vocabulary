@@ -36,6 +36,7 @@ def main_wikipedia_get_plain(language, wikipedia_folder, subset_sorted_article_l
     #parse the xml dump to a csv dump
     split_articles_to_csv (whole_folder, from_xml_bz2 = dump_file , dump_save_to=csv_extracted_file, threshold_skip_little = 100)
     print('split_articles_to_csv done')
+    #create plains with only the bests articles
     if subset_sorted_article_list_file and os.path.exists(subset_sorted_article_list_file):
         for nb_view in [100, 250000, int(1e6)] :
             get_subset_view_from_csv(
@@ -47,7 +48,7 @@ def main_wikipedia_get_plain(language, wikipedia_folder, subset_sorted_article_l
             )
 
 if __name__ == '__main__' :
-    #to test the 
+    #test 
     test_data_folder = base_vocab_folder + 'test_data/'
     if not os.path.exists(test_data_folder) :
         os.mkdir(test_data_folder)

@@ -3,9 +3,9 @@ use wiki title as vocab and wikitionnary as synonyms. Language is french
 Need the result from synonym_dictionnary_wiktionnary.py
 '''
 
-from wiki_title import factory_create_title_wiki
-from get_args import get_french_var
-from create_ngram import create_ngram_framework, get_processed_file
+from coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.wiki_title import factory_create_title_wiki
+from coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.get_args import get_french_var
+from coproximity_create_vocabulary.extract_vocabulary.basic_method.create_ngram import create_ngram_framework, get_processed_file
 
 from coproximity_create_vocabulary.data_conf import base_vocab_folder
 
@@ -24,7 +24,7 @@ def main_wikititle_wiktionary(n_best_taken, base_data_folder, use_id_to_title=Tr
     stop_words , duplicate_stop_words, processed_method, synonym_to_ignore, word_to_add, synonym_to_add, spacy_model, disable_tag = get_french_var()
 
     data_folder = base_data_folder + '/'
-    vocab_parent_folder = data_folder + 'whole/vocabulary/french/ngram_title_wiki/'
+    vocab_parent_folder = base_vocab_folder + 'french/ngram_title_wiki/'
     article_list_file=  data_folder + 'wikipedia/sorted_view_wiki_over_years.csv'
     processed_article_file = get_processed_file(article_list_file, spacy_model, disable_tag, 'csv')
     whole_folder :str = data_folder + 'wikipedia/whole/'

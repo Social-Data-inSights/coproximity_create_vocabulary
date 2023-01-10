@@ -24,7 +24,7 @@ def main_wikititle(
     overwrite: try to overwrite the processed files (but reuse the processed elements if they are shared by the old and new files)
     additional_folder_name: suffix to add to a folder to change its name, to use to change the name of a vocabulary folder
     print_progress_info:  print the progress of the vocabulary creation, in a stereotyped behavior. Used in electron front to get the progress of the process.
-    whole_folder: english vocabulary folder
+    whole_folder: english language folder
 
     '''
     

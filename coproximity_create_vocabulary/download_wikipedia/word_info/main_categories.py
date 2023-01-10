@@ -2,8 +2,8 @@
 Get all you need to filter based on categories for the french wiki titles
 '''
 
-from coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.word_info.get_categories_from_xml import get_categories_from_xml
-from coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.word_info.download_categories_sub_categories_from_wiki_page import (
+from coproximity_create_vocabulary.download_wikipedia.word_info.get_categories_from_xml import get_categories_from_xml
+from coproximity_create_vocabulary.download_wikipedia.word_info.download_categories_sub_categories_from_wiki_page import (
     download_all_categories, download_all_categories_depth4, flatten_all_wiki_subcategories, page_name_to_filename, page_name_to_trimmed_filename,
     trim_categories
 )
@@ -11,7 +11,7 @@ from coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.wor
 from coproximity_create_vocabulary.data_conf import base_vocab_folder
 import os
 
-categories_folder = base_vocab_folder + 'whole/vocabulary/french/categories/'
+categories_folder = base_vocab_folder + 'french/categories/'
 
 split_path = categories_folder.split('/')
 for i in [ -3, -2, -1, len(split_path)] :
@@ -20,7 +20,7 @@ for i in [ -3, -2, -1, len(split_path)] :
         os.mkdir(new_path)
 
 #extract the categories for the wikipedia articles
-from_xml = base_vocab_folder + 'wikipedia/whole/wiki_fr_dump.xml.bz2'
+from_xml = base_vocab_folder + 'french/dumps/wiki_fr_dump.xml.bz2'
 id2categories_filename = f'{categories_folder}id2categories.json'
 title2categories_filename = f'{categories_folder}title2categories.json'
 print(id2categories_filename)

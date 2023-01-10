@@ -7,7 +7,7 @@ from coproximity_create_vocabulary.data_conf import base_vocab_folder
 def create_id2info ( from_id2title_file , to_id2info_file, set_id_file = None ) :
     '''
     create the information files for the wikipedia dataset: the title and what to add to the url to get the page (which is also the title).
-    Load the id to title dictionnary from path {from_id2title_file}, create the metadata in a good form, 
+    Load the id to title dictionary from path {from_id2title_file}, create the metadata in a good form, 
     filter with {set_id_file} if some was given and save it to {to_id2info_file}
     '''
     with open(from_id2title_file) as f :
