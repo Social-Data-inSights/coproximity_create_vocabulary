@@ -111,26 +111,26 @@ def create_default_wikititle(
             )
 
 default_wiki_title_fr_folder : str = base_vocab_folder + 'french/'
-def main_wiki_fr_create_smaller_multi_synonyms_text_file(project, vocabulary_folder=default_wiki_title_fr_folder) :
+def main_wiki_fr_create_smaller_multi_synonyms_text_file(project, language_folder=default_wiki_title_fr_folder) :
     '''
-    Given a path {vocabulary_folder} to finished vocabulary, create a dict which, for the vocabulary folder which have the most synonyms which redirect to 
-    multiple titles (i.e. all lower and no accent), for all titles which have a at least one synonym which redirect to multiple titles, 
+    Given a path of a language folder{language_folder} which contains the finished main vocabularies, create a dict which, for the vocabulary folder which have the most synonyms which redirect to 
+    multiple titles (i.e. all lower and no accent); for all titles which have a at least one synonym which redirect to multiple titles, 
     we get their text description (used for giving them a doc2vec vector with the fasttext) and save them.
     
     It is used to bundle together the pertinent texts and send them to the electron frontend to avoid loading all the Wikipedia texts in the electron.
 
-    project: project (=language) from which we created {vocabulary_folder} (used to get the articles' content)
+    project: project (=language) from which we created {language_folder} (used to get the articles' content)
     '''
     use_lower_processed, use_no_accent_processed = True, True
     n_best_taken = 200000
     new_str = f"{'_lower' if use_lower_processed else ''}{'_no_accent' if use_no_accent_processed else ''}"
             
-    vocab_folder = vocabulary_folder+'ngram_title_wiki/wiki_title_%s%s/'%('whole' if n_best_taken is None else 'best_%d'%n_best_taken, new_str)
-    meta_folder = vocabulary_folder + 'meta/'
+    vocab_folder = language_folder+'ngram_title_wiki/wiki_title_%s%s/'%('whole' if n_best_taken is None else 'best_%d'%n_best_taken, new_str)
+    meta_folder = language_folder + 'meta/'
 
-    plain_dump_file = vocabulary_folder + f'/dumps/wiki_{project}_dump.xml.bz2'
-    plain_index_dump_file = vocabulary_folder + f'/dumps/wiki_{project}_dump_index.xml.bz2'
-    temp_dump_file = vocabulary_folder + f'/dumps/wiki_{project}_dump_temp.xml.bz2'
+    plain_dump_file = language_folder + f'/dumps/wiki_{project}_dump.xml.bz2'
+    plain_index_dump_file = language_folder + f'/dumps/wiki_{project}_dump_index.xml.bz2'
+    temp_dump_file = language_folder + f'/dumps/wiki_{project}_dump_temp.xml.bz2'
     func_get_text_from_title_factory = lambda : get_title_from_dump_factory(plain_index_dump_file, plain_dump_file, temp_dump_file)
 
 
@@ -155,7 +155,7 @@ def main_default_wikititle(spacy_model, disable_tag, fasttext_model, project, pr
     create_default_wikititle(
         int(2e5), spacy_model, disable_tag, fasttext_model, project, overwrite=False, print_progress_info=print_progress_info, whole_folder = whole_folder
     )
-    main_wiki_fr_create_smaller_multi_synonyms_text_file(project, vocabulary_folder=whole_folder)
+    main_wiki_fr_create_smaller_multi_synonyms_text_file(project, language_folder=whole_folder)
 
 if __name__ == '__main__' :
     main_default_wikititle(n_best_taken= 100000)

@@ -18,7 +18,10 @@ from coproximity_create_vocabulary.extract_vocabulary.basic_method.util_vocab im
 delete_accent = lambda s : ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
 def get_french_var (use_lower_processed=False, use_no_accent_processed=False) :
     '''
-    Get the french variables  
+    Get the french variables
+
+    use_lower_processed: if true, the processing sets the result as lowercase (except for acronyms (words with only uppercase))
+    use_no_accent_processed: if true, the processing deletes the accents
     '''
     synonym_to_ignore = {
         ('Cites', "Convention sur le commerce international des espèces de faune et de flore sauvages menacées d'extinction" ),

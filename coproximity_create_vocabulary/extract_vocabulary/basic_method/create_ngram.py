@@ -1,15 +1,15 @@
 '''
-Template to create a vocabulary and it synonyms. 
+Template to create a vocabulary and its synonyms. 
 '''
 import  json , os
 from typing import  Callable
 
-def save_all (to_save, vocab_folder) :
+def save_all (to_save, save_folder) :
     '''
-    Save all element of {to_save} into the folder {vocab_folder}. {vocab_folder} is a list of tuple (filename, what to save)
+    Save all element of {to_save} into the folder {save_folder}. {to_save} is a list of tuple (filename, what to save)
     '''
     for filename , to_save in to_save:
-        with open(vocab_folder+filename , 'w' , encoding = 'utf8') as f :
+        with open(save_folder+filename , 'w' , encoding = 'utf8') as f :
             json.dump(to_save , f, sort_keys=True)
 
 
@@ -35,16 +35,28 @@ def create_ngram_framework (
 
     vocab_parent_folder : Folder in which the different version of vocabulary will be saved
     vocab_folder        : Folder in which to save this vocabulary
-    preprocess          : Method to prepare the data for the vocabulary extraction. 
-    create_vocabulary        : Methods that takes in the path to a csv ngrams and return a set of ngrams (to consider our vocabulary), a dict of those ngrams
-        to their processed versions, and the ngrams that were openly discarded (ie ngrams considered but rejected).
-    create_synonyms     : A methods which takes a path to a csv of synonyms, 
-        a path to a file where we will save the processed version of the synonyms previously cited, the set of the vocabulary, the set of the
-        processed vocabulary. Return : a curated list of tuple (the synonyms, the processed synonyms, the the vocabulary's ngrams they
-        are synonyms of) and a list of the rejected synonyms
-    process_all         : Take the ngrams/synonyms dictionary and delete all synonyms whose processing is synonym of multiple ngrams and return the expressions with multiple synonyms 
+    preprocess          : Method to prepare the data for the vocabulary extraction. The method takes no argument
+    create_vocabulary   : Methods to get the main tokens of the vocabulary, takes in:
+            - the path to a csv reader (from auto_reader_writer.py) (this will be{word_reader})
+            - a dict of the synonyms ({synonym: main token})
+            - a list of additional word to add (this will be {word_to_add}).
+        Return: 
+            - a set of ngrams (to be considered our vocabulary)
+            - a dict of those ngrams to their processed versions
+            - a list of additional content to save as [(name of a file, jsonable element to save)]
+    create_synonyms     : A methods to create the synonyms, takes in:
+            - a path to a to a csv reader (from auto_reader_writer.py) (this will be{synonyms_reader}), 
+            - the set of the vocabulary
+            - the set of the processed vocabulary
+            - a dict of the additional synonyms (this will be {synonym_to_add}).
+        Return : 
+            - a curated list of tuple (the synonyms, the processed synonyms, the the vocabulary's ngrams they are synonyms of) 
+            - a list of the rejected synonyms as [(synonym, preprocessed synonym, main token, why the synonym was rejected)]
+            - a list of additional content to save as [(name of a file, jsonable element to save)]
+    process_all         : Take the ngrams/synonyms dictionary and delete all synonyms whose processing is synonym of multiple ngrams 
+        Return: this filtered result and additional elements to save as a list [(name of a file, jsonable element to save)] 
     post_process        : What to do after the synonyms and vocabulary is created. 
-    word_reader         : iterator that return for each iteration a token, to possibly add to the vocabulary, its clean format, its processed format and its associated score
+    word_reader         : iterator that return for each iteration a token (to possibly add to the vocabulary), its clean format, its processed format and its associated score
     synonyms_reader     : iterator which return at each iteration a tuple (synonym to a token of word_reader, its processed format, the token)
     word_to_add         : list of additional tokens to add to the vocabulary
     synonym_to_add      : dict of additional synonyms to add to the synonym list (format {synonym: main token})
@@ -58,6 +70,7 @@ def create_ngram_framework (
     if is_printing_progress :
         print('INFO_PRINT:preprocess:start', flush=True)
 
+    #prepare the data for the vocabulary creation 
     preprocess()
 
     if is_printing_progress :
@@ -75,7 +88,7 @@ def create_ngram_framework (
                     global_synonyms[idx] = set()
                 global_synonyms[idx].add(elem)
 
-    # get vocabulary
+    # generate the set of tokens of the vocabulary
     set_tokens, processed_dict, to_save = create_vocabulary(word_reader, global_synonyms, word_to_add)
 
     #save processed version of the vocabulary and vocabulary
@@ -119,6 +132,7 @@ def create_ngram_framework (
     for main_ngrams in set_tokens :
         main_dict_vocab[main_ngrams] = ( processed_dict[main_ngrams].split(' '), '' , main_ngrams.count(' ') + 1)
     
+    #clean main_dict_vocab (mainly used to separate synonyms redirecting to multiple main tokens from the rest of the vocabulary)
     main_dict_vocab, to_save = process_all (main_dict_vocab,)
     save_all(to_save, vocab_folder)
     del to_save

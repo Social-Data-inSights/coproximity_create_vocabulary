@@ -7,7 +7,7 @@ Contains a dockerfile which creates a docker that allows to generate a vocabular
 For the file the docker file takes care of almost everything, you just need to pass 2 arguments
 
 - spacy_model: the spacy model to be used form lemmatisation
-- additional_arg: the arguments to pass to the main_generate_vocab.py (except spacy_model, because we already have).
+- additional_arg: the arguments to pass to the main_generate_vocab.py (except spacy_model, because we already have it).
     i.e. the project (-p), vocabulary name (-l), spacy disable tag (--disable_tag), fasttext model (fasttext_model)
 
 Warning:
@@ -43,5 +43,5 @@ It is advised to use --rm to delete the docker once the vocabularies are created
 ### Example of docker run
 
 ```
-docker run --rm -l "E:/UNIL/backend/data/test_vocab_new_package/vocabulary/":/vm/data/ vocab:it
+docker run --rm -v "E:/UNIL/backend/data/test_vocab_new_package/vocabulary/":/vm/data/ vocab:it
 ```

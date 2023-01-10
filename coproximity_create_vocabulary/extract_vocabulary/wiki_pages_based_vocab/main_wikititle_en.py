@@ -19,7 +19,7 @@ def main_wikititle(
 ) : 
     '''
     n_best_taken: size of the vocabulary to create
-    base_data_folder: data folder of https://github.com/matthieuDev/Projet_AdE-IMI/ where we will search the Wikipedia articles 
+    base_data_folder: data folder of https://github.com/matthieuDev/Projet_AdE-IMI/ where we will get the Wikipedia articles 
     use_id_to_title: if true consider that the wikipedia title csv is made of the wikipedia id and give a id2title_file to create_processed_title
     overwrite: try to overwrite the processed files (but reuse the processed elements if they are shared by the old and new files)
     additional_folder_name: suffix to add to a folder to change its name, to use to change the name of a vocabulary folder
@@ -104,6 +104,8 @@ def main_wiki_en_create_smaller_multi_synonyms_text_file(base_data_folder=test_d
     an save them.
     
     It is used to bundle together the pertinent texts and send them to the electron frontend to avoid loading all the Wikipedia texts in the electron.
+    
+    base_data_folder: data folder of https://github.com/matthieuDev/Projet_AdE-IMI/ in which we will search the Wikipedia articles 
     '''
     use_lower_processed, use_no_accent_processed = True, True
     n_best_taken = 200000

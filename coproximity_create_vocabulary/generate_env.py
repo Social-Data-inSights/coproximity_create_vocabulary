@@ -1,9 +1,9 @@
 '''
-File to generate .env based. Needs to give both the base folder with parent_folder_init and the allowed download projects with allowed_download_projects,
-if a .env already exists, it is used to give default values if one of the 2 arguments are missing. Otherwise, if 1 argument is missing, an error will be raised.
+File to generate .env based. Needs to give both the base folder with parent_folder_init and the allowed download projects with allowed_download_projects.
+If a .env already exists, it is used to give default values if one of the 2 arguments are missing. Otherwise, if 1 argument is missing, an error will be raised.
 
 Example :
-python generate_env --parent_folder_init E:/UNIL/backend/data/whole/vocabulary/ --allowed_download_projects fr_en_it_de
+python generate_env.py --parent_folder_init E:/UNIL/backend/data/whole/vocabulary/ --allowed_download_projects fr_en_it_de
 '''
 
 from coproximity_create_vocabulary.data_conf import base_vocab_folder, set_allowed_download_projects

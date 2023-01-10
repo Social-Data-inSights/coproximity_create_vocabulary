@@ -20,8 +20,9 @@ n_best_taken = int(1e5)
 test_data_folder = base_vocab_folder + 'test_data/'
 def get_translate_from_dump(from_, to_, save_file, translate_folder, from_id2title_file):
     '''
-    Get the the associated wikipedia pages between 2 language. i.e. if we have en and fr, get all the pages which can are the same but just
-    switching project. Save the result in {save_file}
+    Get the the associated wikipedia pages between 2 language. i.e. if we have en and fr, get all the pages in english in which we can change 
+    the language in french
+    save the result in {save_file}
 
     from_: project from which to search the page to translate
     to_: project toward  which to search the page to translate
@@ -40,6 +41,7 @@ def get_translate_from_dump(from_, to_, save_file, translate_folder, from_id2tit
         with open(from_id2title_file, encoding='utf8') as f :
             from_id2title = json.load(f)
 
+        #parse the SQL, is quicker than loading it
         translate = []
         with gzip.open(prj2langlinks_file(from_)) as f  :
             for line in f :
@@ -96,7 +98,7 @@ synonym_to_ignore.add(('A record', 'List of DNS record types'))
 
 def wikititle_en2fr (use_lower_processed = False, use_no_accent_processed = False) :
     '''
-    Create the method to feed to create_ngram_framework
+    Create the methods to feed to create_ngram_framework
     '''
     #get the vocabulary by getting all the articles from the french and english projects which can be linked to an article of the other set
     en2fr = {
@@ -147,6 +149,7 @@ def wikititle_en2fr (use_lower_processed = False, use_no_accent_processed = Fals
         with open (vocab_folder+'main_dict_vocab.json') as f :
             main_dict_vocab = json.load(f)
             
+        #save the english version
         with open (vocab_folder+'main_dict_vocab_en.json', 'w') as f :
             json.dump(main_dict_vocab, f)
             
@@ -170,9 +173,9 @@ def wikititle_en2fr (use_lower_processed = False, use_no_accent_processed = Fals
 def main_wikititle_en2fr(base_data_folder=test_data_folder) :
     '''
     Get the vocabulary that takes the vocabulary and synonyms from the best english pages and their redirections. 
-    And link them to a translation to the french Wikipedia
+    And link them to a translation of the french Wikipedia
 
-    base_data_folder: data folder of https://github.com/matthieuDev/Projet_AdE-IMI/ where we will search the Wikipedia articles 
+    base_data_folder: data folder of https://github.com/matthieuDev/Projet_AdE-IMI/ where we will get the Wikipedia articles 
     '''
     use_lower_processed, use_no_accent_processed = False, False
 

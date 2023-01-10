@@ -13,7 +13,8 @@ from coproximity_create_vocabulary.extract_vocabulary.basic_method.util_vocab im
 
 from coproximity_create_vocabulary.download_wikipedia.create_wikipedia_plain.split_articles_to_csv import split_articles_to_csv
 
-
+#This is used to describe the steps of the pipeline. Used in the electron front to check on the progress
+#the false true means it is easy to make a progress bar
 print_progress_info = [
     ['preprocess', False],
     ['preprocess synonyms', True],
@@ -48,7 +49,10 @@ def split_first_word (s, apply_rewikititle=True) :
         return first , res
 
 def test_duplicate (s, duplicate_stop_words, article_set, apply_rewikititle=True) :
-    #test if the expression {s} is a duplicate (see get_args.py) if {apply_rewikititle} is True, cast the first letter of the result of split_first_word as uppercase
+    '''
+    test if the expression {s} is a duplicate (see get_args.py) 
+    if {apply_rewikititle} is True, cast the first letter of the result of split_first_word as uppercase before checking
+    '''
     first , remainder = split_first_word (s, apply_rewikititle)
     return remainder and first.lower() in duplicate_stop_words and remainder in article_set
 
@@ -173,9 +177,9 @@ def factory_create_title_wiki (stop_words , duplicate_stop_words,
     def create_vocabulary_wiki (word_reader, global_synonyms, word_to_add) :
         '''
         Methods that takes in the content of word_reader and return a set of ngrams (to consider our vocabulary), a dict of those ngrams
-        to their processed versions, and the titles that were openly discarded (ie title considered but rejected).
+        to their processed versions, and the titles that were openly discarded(ie title considered but rejected) (in the craete_ngram.save_all format).
 
-        word_reader: iterator that return for each iteration a token, to possibly add to the vocabulary, its clean format, its processed format and its associated score
+        word_reader: iterator that return for each iteration a token (to possibly add to the vocabulary), its clean format, its processed format and its associated score
         global_synonyms: dict {synonym: main token of word_reader} for all synonym given in the {synonyms_reader} of create_ngram.create_ngram_framework
         word_to_add: list of additional tokens to add to the vocabulary
         '''
@@ -217,7 +221,7 @@ def factory_create_title_wiki (stop_words , duplicate_stop_words,
         set_articles, processed_dict, to_write_list = \
             create_vocabulary_factory(get_problems_and_ask_if_stopping, wiki_processed_method)(word_reader, global_synonyms, word_to_add)
         
-        #For each title of the vocabulary, associate to this title with the first letter in lower case its processed title 
+        #For each title of the vocabulary, associate this title with the first letter in lower case to its processed title 
         for word, lem_word in list(processed_dict.items()) :
             processed_dict[unwikititle(word)] = lem_word
 
@@ -227,7 +231,7 @@ def factory_create_title_wiki (stop_words , duplicate_stop_words,
     def create_synonyms (synonyms_reader, set_articles, processed_set_articles, synonym_to_add) :
         '''
         Take the content of synonyms_reader and return a curated list of tuple (the synonyms, the processed synonyms, the ngrams from the vocabulary they
-        are synonyms of) and a list of the rejected synonyms
+        are synonyms of) and a list of the rejected synonyms (in the craete_ngram.save_all format)
 
         synonyms_reader: iterator which return at each iteration a tuple (synonym to a token of word_reader, its processed format, the token)
         set_token: set of the tokens considered as the vocabulary
@@ -250,12 +254,12 @@ def factory_create_title_wiki (stop_words , duplicate_stop_words,
                     (test_duplicate(main, duplicate_stop_words, set_articles), 'is duplicate'), #if the synonym is not a duplicate whose original was deemed relevant
                     (main in set_articles , 'is a main article' ), #the synonym is not already a title
                     (lem_main in processed_set_articles, 'processed token is a main article'), #the processed synonym is not already a processed title
-                    (main.lower() in stop_words, 'stop word'), #the synonym is a stop word
-                    (lem_main.lower() in stop_words, 'processed token stop word'), #the processed synonym is a stop word
-                    ((main, synonym) in synonym_to_ignore, 'manually set as bad' ), #not the synonym in the synonym to ignore
-                    ((lem_main, synonym) in synonym_to_ignore, 'processed token manually set as bad' ), #not the processed synonym in the synonym to ignore
+                    (main.lower() in stop_words, 'stop word'), #the synonym is not a stop word
+                    (lem_main.lower() in stop_words, 'processed token stop word'), #the processed synonym is not a stop word
+                    ((main, synonym) in synonym_to_ignore, 'manually set as bad' ), # the synonym is not in the synonym to ignore
+                    ((lem_main, synonym) in synonym_to_ignore, 'processed token manually set as bad' ), #the processed synonym is not in the synonym to ignore
                     (re.fullmatch('[A-Z]\'', main), '[A-Z]\''),  # delete all the m' and d'
-                    ( len(main) == 1, 'size == 1' ), #not be of size 1 (includes digits, punctuation and 1-letter words)
+                    ( len(main) == 1, 'size == 1' ), #is not of size 1 (includes digits, punctuation and 1-letter words)
                     (not lem_main, 'processed main is empty'), #the processed version should be something
                 ] + additional_problems
                 if val_bool 
@@ -287,7 +291,7 @@ def factory_create_title_wiki (stop_words , duplicate_stop_words,
         to_save = []
         for title , (lem_title , syn , count ) in main_dict_vocab.items() :
             assert (not ' '.join(lem_title).lower() in stop_words and not title.lower() in stop_words) ,(title , (lem_title , syn , count ))
-        #count the number of synonyms by processed redirections
+        #group the synonyms by processed redirections
         count_same = {}
         token2title = {}
         for title , (lem_title,syn,_) in main_dict_vocab.items() :
@@ -300,17 +304,20 @@ def factory_create_title_wiki (stop_words , duplicate_stop_words,
             token2title[lt].add(title)
 
 
-        #separate redirections which redirect to multiple articles 
+        #separate redirections which redirect to multiple articles from the main_dict_vocab
         multiple_synonyms = []
         for new_title , set_title in count_same.items() :
 
             if new_title in main_dict_vocab and not main_dict_vocab[new_title][1] :
+                #if element is a main token of the vocabulary, keep it
                 main_dict_vocab[new_title] = ( new_title.split(' '), '' , new_title.count(' ') + 1)  
             elif len(set_title) == 1 :
+                #if the synonym link to only 1 main token, keep it as a synonym
                 title = list(set_title)[0]
                 assert not new_title in stop_words and not unwikititle(new_title) in stop_words , (new_title , title)
                 main_dict_vocab[new_title] = ( new_title.split(' '), title , new_title.count(' ') + 1)  
             else :
+                #if a synonym link to multiple main tokens, delete it from main_dict_vocab and save it into multiple_synonyms
                 multiple_synonyms.append((new_title, list(set_title)))
                 multiple_synonyms.append((unwikititle(new_title), list(set_title)))
                 for tok_title in token2title[new_title] :
@@ -418,6 +425,9 @@ def plain_get_text_from_title_factory(title2id_file, token2text_file) :
     return create_translate_title2text_id
 
 def get_dict_search_index(index_filename):
+    '''
+    given the path to a dump of a pages-articles-multistream-index , load an approximate position in the pages-articles-multistream dump
+    '''
     data_length = start_byte = 0
     curr_res, res = set(), {}
     
@@ -437,7 +447,16 @@ def get_dict_search_index(index_filename):
     if curr_res :
         res.update({title: (start_byte, curr_start_byte - start_byte) for title in curr_res})
     return res
+
+
 def get_title_from_dump_factory(index_filename, wiki_filename, temp_filename) :
+    '''
+    Method used in main_get_default_by_project.py to get the text for Wikipedia titles.
+    Given a pages-articles-multistream dump from wikipedia saved at {wiki_filename}, and it index (pages-articles-multistream-index) saved at {wiki_filename}
+    create a method that takes in a title and return the text of its article
+
+    temp_filename: file in which subset of {wiki_filename} are saved to be extracted
+    '''
     dict_search_index = get_dict_search_index(index_filename)
 
     def get_title_from_dump(title) :

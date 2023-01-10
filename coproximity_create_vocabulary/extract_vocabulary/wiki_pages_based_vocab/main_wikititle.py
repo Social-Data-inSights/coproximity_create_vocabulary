@@ -109,6 +109,9 @@ def main_wiki_fr_create_smaller_multi_synonyms_text_file(wiki_title_fr_folder=de
     an save them.
     
     It is used to bundle together the pertinent texts and send them to the electron frontend to avoid loading all the Wikipedia texts in the electron.
+    
+    base_data_folder: data folder of https://github.com/matthieuDev/Projet_AdE-IMI/ in which we will search the Wikipedia articles 
+    wiki_title_fr_folder: french language folder
     '''
     use_lower_processed, use_no_accent_processed = True, True
     n_best_taken = 200000

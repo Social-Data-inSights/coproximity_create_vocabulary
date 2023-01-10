@@ -1,6 +1,6 @@
 # alt_vocab
 
-Alternative vocabulary that were proposed but did not became the main ones because it was not possible to know which one were better. They are "with data project mains".
+Alternative vocabulary that were proposed but did not became the main ones because it was not possible to know which ones were better. They are "with data project mains".
 
 (See wiki_pages_based_vocab for what "with data project mains" means)
 

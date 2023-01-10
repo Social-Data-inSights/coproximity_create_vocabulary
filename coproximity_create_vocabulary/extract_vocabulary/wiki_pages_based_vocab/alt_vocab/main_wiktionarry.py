@@ -15,7 +15,7 @@ def main_wikititle_wiktionary(n_best_taken, base_data_folder, use_id_to_title=Tr
     create the vocabulary for the Wiktionnary in french
     
     n_best_taken: size of the vocabulary to create
-    base_data_folder: data folder of https://github.com/matthieuDev/Projet_AdE-IMI/ where we will search the Wikipedia articles 
+    base_data_folder: data folder of https://github.com/matthieuDev/Projet_AdE-IMI/ where we will get the Wikipedia articles 
     use_id_to_title: if true consider that the wikipedia title csv is made of the wikipedia id and give a id2title_file to create_processed_title
     overwrite: try to overwrite the processed files (but reuse the processed elements if they are shared by the old and new files)
     additional_folder_name: suffix to add to a folder to change its name, to use to change the name of a vocabulary folder

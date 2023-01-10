@@ -12,7 +12,7 @@ This module was created to be used in an other one : https://github.com/matthieu
 
 ### main_get_default_by_project.py
 
-Allows to create a vocabulary from only elements downloaded an created by coproximity_create_vocabulary.download_wikipedia.get_pages_views.main_downloader_wiki ,for any project whose data were downloaded and processed.
+Allows to create a vocabulary from only elements downloaded and created by coproximity_create_vocabulary.download_wikipedia.get_pages_views.main_downloader_wiki ,for any project whose data were downloaded and processed.
 
 ### main_wikititle_en.py
 
@@ -32,7 +32,7 @@ Alternative vocabulary that were proposed but did not became the main ones becau
 
 ### get_args.py
 
-Get the variables to filter: stop words, duplicate stop words, processed method, the synonyms to ignore, handpicked words and synonyms, and the name of the spacy model
+Get the variables to filter for the main languages (French and English): stop words, duplicate stop words, processed method, the synonyms to ignore, handpicked words and synonyms, and the name of the spacy model
 
 ### util_wiki.py
 

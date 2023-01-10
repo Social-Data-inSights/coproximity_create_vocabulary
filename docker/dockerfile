@@ -3,6 +3,7 @@
 FROM python:3.9
 
 RUN mkdir vm
+#volume in which the data will be saved for the docker. Need to be linked as a volume to an external folder foe this docker to be useful.
 VOLUME ["/vm/data/"]
 
 RUN pip install spacy
@@ -16,10 +17,11 @@ RUN git pull
 RUN pip install -e . 
 
 ARG set_allowed_download_projects='fr_en_it_de'
+#generate the .env
 RUN python ./coproximity_create_vocabulary/generate_env.py --parent_folder_init /vm/data/ --allowed_download_projects $set_allowed_download_projects
 
 ARG additional_arg
 ENV additional_arg=${additional_arg}
 ENV spacy_model=${spacy_model}
-# --spacy_model de_core_news_sm -p de -l german --disable_tag tagger_parser_ner --fasttext_model de
+
 CMD python coproximity_create_vocabulary/main_generate_vocab.py --spacy_model $spacy_model $additional_arg

@@ -19,7 +19,7 @@ def main_generate_vocab(project, language_folder, fasttext_model, save_parent_fo
     project: Wikipedia project from which to extract the data from
     language_folder: name of the language folder, where all the data specific to this language will be stored
     fasttext_model: spacy model used to lemmatize the titles during the vocabulary creation
-    save_parent_folder=base_vocab_folder: vocabulary base folder, folder in which all the vocabulary will be saved (vocabulary base folder)
+    save_parent_folder: vocabulary base folder, folder in which all the vocabulary will be saved 
     spacy_model: tags to disable in the spacy model (to speed it up) during the vocabulary creation. If None, try to get a default value from 
         coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.get_args.var_getter_by_project using project as a key
     disable_tag: fasttext model to use to create word2vec vectors from articles during the vocabulary creation. If None, try to get a default value from 
@@ -45,6 +45,8 @@ if __name__ == '__main__' :
     parser.add_argument('--fasttext_model', default=None,  help = 'fasttext model to use to create word2vec vectors from articles during the vocabulary creation')
     args, unknown = parser.parse_known_args()
 
+    #if we give the script no argument, it will do french and english with the default value.
+    #if some arguments are given, but not enough to make the vocabularies, an exception will be raised
     nb_args = len([arg_val for arg_val in args.__dict__.values() if not arg_val is None])
     has_main_args = bool(args.project and args.language_name)
 

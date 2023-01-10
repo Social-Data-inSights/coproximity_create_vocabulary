@@ -1,5 +1,7 @@
 '''
 Transform the expected result of create_ngram into a more useful format for the ngram extraction.
+Used in https://github.com/matthieuDev/Projet_AdE-IMI to extract tokens form texts. 
+
 Get the processed synonyms and processed ngrams to the ngrams they represent for every ngram in the vocabulary, filter out ngrams which are too big, 
 group the remainder by their numbers of words, sort it in descending order.  
 '''
@@ -15,7 +17,7 @@ def get_list_vocab(main_dict_vocab, max_ngram, multiple_synonym_file=None) :
     if a {multiple_synonym_file} is given also add the synonyms linking to multiple ngrams, their formats would be :
     {number of word of the ngram : {
         processed synonym or ngram whose number of word is the index of the dict : 
-        list of tuple (ngram it represents, word2vec representation to the ngram (with wikipedia, this means the fastext mean of their Wikipedia article))}
+        list of tuple (ngram it represents, word2vec representation to the ngram (with wikipedia, this means the fasttext mean of their Wikipedia article))}
     }
 
     main_dict_vocab: main vocabulary file, json contains a dict :

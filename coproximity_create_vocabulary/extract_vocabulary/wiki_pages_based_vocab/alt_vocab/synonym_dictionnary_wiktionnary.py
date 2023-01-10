@@ -17,6 +17,9 @@ def new_dict_data() :
     }
 
 def create_wiktionary_dictionnary(xml_file, synonym_file ) :
+    '''
+    From the decompressed xml f the wikiktionnary dump {xml_file}, extract the synonyms and save them in {synonym_file}
+    '''
     
 
     if os.path.exists(synonym_file) :
@@ -34,6 +37,7 @@ def create_wiktionary_dictionnary(xml_file, synonym_file ) :
     re_text_state = re.compile(r'=+ *{{S\|(.*)}} *=+')
     re_text_value = re.compile(r'\* \[\[(.*)\]\]')
 
+    #set of tags used as synonyms
     set_good_state_in_article = { 'synonymes', 'dérivés', 'apparentés',}
 
     state = OUT_ARTICLE
@@ -56,7 +60,7 @@ def create_wiktionary_dictionnary(xml_file, synonym_file ) :
                         print(counter , time.ctime())
                     counter += 1
                     state = IN_ARTICLE
-                #if we leave an artiacle without being into one or without any line between the beginning and end, we consider that there is a problem  
+                #if we leave an article without being into one or without any line between the beginning and end, we consider that there is a problem  
                 if '</page>' in line :
                     print ('line')
                     raise Exception('article open before the one before being closed')

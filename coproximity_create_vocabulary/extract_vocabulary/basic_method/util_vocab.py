@@ -83,8 +83,13 @@ def tuple_hyphen_in_1word (text) :
 
 def get_tuple_tokenize_text_spacy (to_load, disable_tag=['tagger', 'parser', 'ner'], use_lower=False, use_no_accent=False) :
     """
-    Used for the word tokenization, load a lemmatiser and return a method that takes a string 
+    Used for the word tokenization, load a lemmatizer and return a method that takes a string 
     and return a list of tuples(processed words, non-processed words).
+
+    to_load: spacy model to load
+    disable_tag: disable_tag to give to spacy
+    use_lower: if true, set all non acronyms (words with only uppercase) as lowercase
+    use_no_accent: if true, delete all accents
     """
     nlp = spacy.load(to_load, disable = disable_tag)
     #tuple_hyphen_in_1word is used so that the words with "-" are not split around it.
@@ -104,6 +109,11 @@ def get_lemmatize_text_spacy (to_load, disable_tag=['tagger', 'parser', 'ner'], 
     """
     Used for the word tokenization, load a lemmatiser and return a method that takes a string 
     and return a list of processed words
+
+    to_load: spacy model to load
+    disable_tag: disable_tag to give to spacy
+    use_lower: if true, set all non acronyms (words with only uppercase) as lowercase
+    use_no_accent: if true, delete all accents
     """
     nlp = spacy.load(to_load, disable = disable_tag)
     #hyphen_in_1word is used so that the words with "-" are not split around it. if the word is only made of uppercase, it's an acronym so don't lemmatize

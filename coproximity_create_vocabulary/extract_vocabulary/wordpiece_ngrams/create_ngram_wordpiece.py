@@ -1,3 +1,7 @@
+'''
+TODOC, not urgent because dead end
+'''
+
 import os, json, re, numpy as np, pickle, time, numba as nb
 from collections import Counter
 from nltk import ngrams
