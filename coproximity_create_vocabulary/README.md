@@ -18,12 +18,12 @@ data configuration file. Give variables that should be easily accessible and sta
 
 ### generate_env.py
 
-File to generate .env based. Needs to give both the base folder with parent_folder_init and the allowed download projects with allowed_download_projects.
+File to generate .env based. Needs to give both the base folder with base_vocab_folder and the allowed download projects with allowed_download_projects.
 If a .env already exists, it is used to give default values if one of the 2 arguments are missing. Otherwise, if 1 argument is missing, an error will be raised.
 
 Example :
 
-python generate_env.py --parent_folder_init E:/UNIL/backend/data/whole/vocabulary/ --allowed_download_projects fr_en_it_de
+python generate_env.py --base_vocab_folder E:/UNIL/backend/data/whole/vocabulary/ --allowed_download_projects fr_en_it_de
 
 ### main_generate_vocab.py
 

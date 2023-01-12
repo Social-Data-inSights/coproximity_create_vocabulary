@@ -18,7 +18,7 @@ RUN pip install -e .
 
 ARG set_allowed_download_projects='fr_en_it_de'
 #generate the .env
-RUN python ./coproximity_create_vocabulary/generate_env.py --parent_folder_init /vm/data/ --allowed_download_projects $set_allowed_download_projects
+RUN python ./coproximity_create_vocabulary/generate_env.py --base_vocab_folder /vm/data/ --allowed_download_projects $set_allowed_download_projects
 
 ARG additional_arg
 ENV additional_arg=${additional_arg}

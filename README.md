@@ -42,18 +42,18 @@ Download the article Wikipedia dump, parse them, and get the best views from the
 
 ## repository variables
 
-This repository used some repository variables. Those variables will be used in a lot of scripts and over multiple usage. They need to be easily available and to be static over multiple sessions. There are 2:
+This repository used some repository variables. Those variables will be used in a lot of scripts and over multiple sessions. They need to be easily available and to be static over multiple sessions. There are 2:
 
 - base_vocab_folder: The folder in which all the folder and files will be generated/downloaded/saved. This is the base of the structure described below. 
 
 - set_allowed_download_projects: The set of all projects that will be considered for this usage. It is mostly used to know which project to keep in the count dumps (to use less space). If you want to add a project that was not in the .env, you need to add it, delete all the count from the {base folder}/dumps folder and re run the main. The format of this variable should be a string of all desired projects separated by '_'. i.e. if we want english, german, italian and french, we give it : en_de_it_fr 
 
-You can easily set those variables by using coproximity_create_vocabulary.generate_env.py . It needs to give both the base folder with parent_folder_init and the allowed download projects with allowed_download_projects.
+You can easily set those variables by using coproximity_create_vocabulary.generate_env.py . It needs to give both the base folder with base_vocab_folder and the allowed download projects with allowed_download_projects.
 If a .env already exists, it is used to give default values if one of the 2 arguments are missing. Otherwise, if 1 argument is missing, an error will be raised.
 
 Example :
 
-python generate_env.py --parent_folder_init E:/UNIL/backend/data/whole/vocabulary/ --allowed_download_projects en_de_it_fr
+python generate_env.py --base_vocab_folder E:/UNIL/backend/data/whole/vocabulary/ --allowed_download_projects en_de_it_fr
 
 
 ## Vocabulary creation structure
