@@ -30,7 +30,7 @@ def main_generate_vocab(project, language_folder, fasttext_model, save_parent_fo
 
 
 if __name__ == '__main__' :
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description='Creates the main vocabularies from scratch: download the dumps, extract only the main articles, sort them by pageviews, get the redirections and create the main vocabularies from them.')
     parser.add_argument('--project', '-p', default=None,  help = 'Wikipedia project from which to extract the data from')
     parser.add_argument('--language_name', '-l', default=None,  help = 'name of the language folder, where all the data specific to this language will be stored')
     parser.add_argument(

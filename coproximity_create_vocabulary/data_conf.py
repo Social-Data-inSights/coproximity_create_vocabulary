@@ -10,13 +10,13 @@ from pathlib import Path
 
 env_file = str(Path(__file__).parent.absolute().resolve()) + '/.env'
 
-#charge the data folder path and the allowed projects from the .env file
+#load the data folder path and the allowed projects from the .env file
 if os.path.exists(env_file) :
     from dotenv import load_dotenv
     load_dotenv(env_file)
 
 
-vocab_conf_parser = argparse.ArgumentParser(add_help=False)
+vocab_conf_parser = argparse.ArgumentParser(add_help=False, description='configuration file. Give variables that should be easily accessible and static over multiple sessions, but that can be change by the user.')
 vocab_conf_parser.add_argument('--base_vocab_folder', default=None,  help = 'The folder in which all the folder and files will be generated/downloaded/saved.')
 vocab_conf_parser.add_argument('--allowed_download_projects', default=None,  help = "The set of all projects that will be considered for this usage. It is mostly used to know which project to keep in the count dumps (to use less space). If you want to add a project that was not in the .env, you need to add it, delete all the count from the {base folder}/dumps folder and re run the main. The format of this variable should be a string of all desired projects separated by '_'. i.e. if we want english, german, italian and french, we give it : en_de_it_fr")
 args, unknown = vocab_conf_parser.parse_known_args()
