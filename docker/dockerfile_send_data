@@ -1,0 +1,27 @@
+# We simply inherit the Python 3 image. This image does
+# not particularly care what OS runs underneath
+FROM python:3.9
+
+RUN mkdir vm
+#volume in which the data will be saved for the docker. Need to be linked as a volume to an external folder foe this docker to be useful.
+VOLUME ["/vm/data/"]
+
+RUN pip install spacy
+ARG spacy_model
+RUN python -m spacy download $spacy_model
+
+RUN git clone https://github.com/matthieuDev/coproximity_create_vocabulary.git
+
+WORKDIR coproximity_create_vocabulary
+RUN git pull
+RUN pip install -e . 
+
+ARG set_allowed_download_projects='fr_en'
+#generate the .env
+RUN python ./coproximity_create_vocabulary/generate_env.py --base_vocab_folder /vm/data/ --allowed_download_projects $set_allowed_download_projects
+
+ARG additional_arg
+ENV additional_arg=${additional_arg}
+ENV spacy_model=${spacy_model}
+
+CMD python coproximity_create_vocabulary/send_static_share/main_send_static_share.py --spacy_model $spacy_model $additional_arg

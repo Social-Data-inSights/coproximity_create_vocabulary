@@ -109,3 +109,8 @@ This module will create a path structure in the base folder (set in the .env), h
 
 
 Note: {...} are variable set in the code, the ... is the name of the variable. If there is non {} around something, it is hard coded
+
+## Docker 
+
+TODOC
+TODOC dockerfile_send_data

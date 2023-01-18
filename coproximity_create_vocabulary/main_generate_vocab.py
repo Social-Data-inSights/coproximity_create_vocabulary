@@ -28,22 +28,23 @@ def main_generate_vocab(project, language_folder, fasttext_model, save_parent_fo
     main_downloader_wiki(project, language_folder)
     main_default_wikititle(spacy_model, disable_tag, fasttext_model, project, print_progress_info=False, whole_folder = save_parent_folder + language_folder + '/')
 
+vocab_parser = argparse.ArgumentParser(description='Creates the main vocabularies from scratch: download the dumps, extract only the main articles, sort them by pageviews, get the redirections and create the main vocabularies from them.')
+vocab_parser.add_argument('--project', '-p', default=None,  help = 'Wikipedia project from which to extract the data from')
+vocab_parser.add_argument('--language_name', '-l', default=None,  help = 'name of the language folder, where all the data specific to this language will be stored')
+vocab_parser.add_argument(
+    '--spacy_model', default=None,
+    help = 'spacy model used to lemmatize the titles during the vocabulary creation.If None, try to get a default value from coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.get_args.var_getter_by_project using project as a key'
+)
+vocab_parser.add_argument(
+    '--disable_tag', default=None,
+    help = 'tags to disable in the spacy model (to speed it up) during the vocabulary creation.If None, try to get a default value from coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.get_args.var_getter_by_project using project as a key'
+
+)
+vocab_parser.add_argument('--fasttext_model', default=None,  help = 'fasttext model to use to create word2vec vectors from articles during the vocabulary creation')
+
 
 if __name__ == '__main__' :
-    parser = argparse.ArgumentParser(description='Creates the main vocabularies from scratch: download the dumps, extract only the main articles, sort them by pageviews, get the redirections and create the main vocabularies from them.')
-    parser.add_argument('--project', '-p', default=None,  help = 'Wikipedia project from which to extract the data from')
-    parser.add_argument('--language_name', '-l', default=None,  help = 'name of the language folder, where all the data specific to this language will be stored')
-    parser.add_argument(
-        '--spacy_model', default=None,
-        help = 'spacy model used to lemmatize the titles during the vocabulary creation.If None, try to get a default value from coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.get_args.var_getter_by_project using project as a key'
-    )
-    parser.add_argument(
-        '--disable_tag', default=None,
-        help = 'tags to disable in the spacy model (to speed it up) during the vocabulary creation.If None, try to get a default value from coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.get_args.var_getter_by_project using project as a key'
-    
-    )
-    parser.add_argument('--fasttext_model', default=None,  help = 'fasttext model to use to create word2vec vectors from articles during the vocabulary creation')
-    args, unknown = parser.parse_known_args()
+    args, unknown = vocab_parser.parse_known_args()
 
     #if we give the script no argument, it will do french and english with the default value.
     #if some arguments are given, but not enough to make the vocabularies, an exception will be raised

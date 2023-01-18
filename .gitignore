@@ -4,6 +4,7 @@
 **/TODOC.txt
 
 build/
+vocabulary/
 coproximity_create_vocabulary/data_conf.py
 coproximity_create_vocabulary.egg-info/
 coproximity_create_vocabulary/.env

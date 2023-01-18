@@ -52,3 +52,7 @@ Folder containing everything to download and handle dumps
 ### extract_vocabulary
 
 Contains everything to generate the vocabularies from the results of download_wikipedia, and handle them afterwards
+
+### static_share
+
+TODOC

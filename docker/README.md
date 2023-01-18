@@ -1,6 +1,7 @@
 # Docker
 
 Contains a dockerfile which creates a docker that allows to generate a vocabulary from scratch. 
+TODOC add 
 
 ## Docker build
 
