@@ -52,3 +52,9 @@ docker run --rm -v "E:/UNIL/backend/data/test_vocab_new_package/vocabulary/":/vm
 nohup ./junipero_update_vocab_and_send.sh > log.txt &
 ```
 junipero_update_vocab_and_send.sh
+
+cron for the send :
+
+```
+crontab -l | { cat; echo "0 0 3 * * ./junipero_update_vocab_and_send.sh > log.txt"; } | crontab -
+```
