@@ -46,3 +46,9 @@ It is advised to use --rm to delete the docker once the vocabularies are created
 ```
 docker run --rm -v "E:/UNIL/backend/data/test_vocab_new_package/vocabulary/":/vm/data/ vocab:it
 ```
+
+## Send data to server Docker
+```
+nohup ./junipero_update_vocab_and_send.sh > log.txt &
+```
+junipero_update_vocab_and_send.sh

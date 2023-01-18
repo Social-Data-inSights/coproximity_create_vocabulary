@@ -41,3 +41,4 @@ def send_to_server(language_folder, to_send_folder, ssh_args=ssh_args_compascien
         ('meta.zip', f'meta-{string_date}.zip'),
     ]:
         scp.put(language_folder + from_local_file, to_send_folder + to_server_file)
+        p.exec_command(f'ln -s {to_send_folder + to_server_file} {to_send_folder + to_server_file.replace(string_date, "latest")}')
