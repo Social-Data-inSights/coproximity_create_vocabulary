@@ -26,7 +26,7 @@ def main_downloader_wiki(project, language_folder, save_parent_folder=base_vocab
     print('start main_downloader_wiki')
     
     #download and process redirections
-    main_download_synonyms(project, language_folder, save_parent_folder=save_parent_folder)
+    '''main_download_synonyms(project, language_folder, save_parent_folder=save_parent_folder)
     
     #download the article dump and an index to find them more easily in the dump
     plain_dump_file = save_parent_folder + language_folder + f'/dumps/wiki_{project}_dump.xml.bz2'
@@ -38,7 +38,7 @@ def main_downloader_wiki(project, language_folder, save_parent_folder=base_vocab
     download_page(
         index_dump_file,
         f'https://dumps.wikimedia.org/{project}wiki/latest/{project}wiki-latest-pages-articles-multistream-index.txt.bz2'
-    )
+    )'''
     
     #download and process the page views
     main_download_wiki_title(
