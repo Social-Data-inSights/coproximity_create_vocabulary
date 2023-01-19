@@ -1,5 +1,11 @@
 '''
-TODOC
+Creates the main vocabularies from scratch: download the dumps, extract only the main articles, sort them by pageviews, get the redirections 
+and create the main vocabularies from them. And then zip the meta folder (in which the synonyms and lexicon are saved, with their precessed version) 
+and send them to the static_share server.
+
+use the command line arguments from the coproximity_create_vocabulary.main_generate_vocab parser
+
+example:  python main_send_static_share.py --project it --language_name italian --spacy_model it_core_news_lg --disable_tag parser_ner --fasttext_model fr
 '''
 from coproximity_create_vocabulary.data_conf import base_vocab_folder
 
@@ -9,9 +15,9 @@ from coproximity_create_vocabulary.send_static_share.handle_server import send_t
 
 def main_send_static_share(project, language_name, fasttext_model, save_parent_folder=base_vocab_folder, spacy_model = None, disable_tag = None) :
     '''
-    Creates the main vocabularies from scratch. TODOC
+    Creates the main vocabularies from scratch, zip the important part and send them to the static_share server.
 
-    project: Wikipedia project from which to extract the data from
+    project: Wikipedia project from which to extract the data from. Will also be the name of the language folder in the server.
     language_name: name of the language folder, where all the data specific to this language will be stored
     fasttext_model: spacy model used to lemmatize the titles during the vocabulary creation
     save_parent_folder: vocabulary base folder, folder in which all the vocabulary will be saved 

@@ -172,16 +172,19 @@ def get_title_count_sorted(sorted_view_file, dump_folder, project, begin_month, 
         #get the title count from the SQL dumps
         string_byte = project.encode('utf8')
         curr_title_count = Counter()
-        with bz2.open(count_file) as f  :
-            for line in f :
-                if line.strip() and line.startswith(string_byte) :
-                    line = line.decode('utf-8').strip().split(' ')
+        try :
+            with bz2.open(count_file) as f  :
+                for line in f :
+                    if line.strip() and line.startswith(string_byte) :
+                        line = line.decode('utf-8').strip().split(' ')
 
-                    if len(line) == 4 :
-                        count, title, id_, count = line
-                        curr_title_count[title] += int(count)
-                    else :
-                        print('reduced count line != 4', line)
+                        if len(line) == 4 :
+                            count, title, id_, count = line
+                            curr_title_count[title] += int(count)
+                        else :
+                            print('reduced count line != 4', line)
+        except OSError:
+            print('could not load', count_file)
 
         #filter the non main pages and cast the count as int
         curr_title_count = { title: int(count) for title, count in curr_title_count.items() if title in set_titles }

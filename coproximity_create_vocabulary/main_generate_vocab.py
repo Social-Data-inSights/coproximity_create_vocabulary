@@ -25,7 +25,7 @@ def main_generate_vocab(project, language_folder, fasttext_model, save_parent_fo
     disable_tag: fasttext model to use to create word2vec vectors from articles during the vocabulary creation. If None, try to get a default value from 
         coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.get_args.var_getter_by_project using project as a key
     '''
-    main_downloader_wiki(project, language_folder)
+    #main_downloader_wiki(project, language_folder)
     main_default_wikititle(spacy_model, disable_tag, fasttext_model, project, print_progress_info=False, whole_folder = save_parent_folder + language_folder + '/')
 
 vocab_parser = argparse.ArgumentParser(description='Creates the main vocabularies from scratch: download the dumps, extract only the main articles, sort them by pageviews, get the redirections and create the main vocabularies from them.')
