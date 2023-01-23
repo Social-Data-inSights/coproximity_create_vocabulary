@@ -62,7 +62,7 @@ if __name__ == '__main__' :
         #default project values
         for project, language_folder, spacy_model, disable_tag, fasttext_model in [
             #is none because we have an argument getter  in var_getter_by_project
-            #('fr', 'french', None, None, 'en'),
-            ('en', 'english', None, None, 'fr'),
+            ('fr', 'french', None, None, 'fr'),
+            #('en', 'english', None, None, 'en'),
         ] :
             main_generate_vocab(project, language_folder, fasttext_model=fasttext_model, save_parent_folder=base_vocab_folder, spacy_model=spacy_model, disable_tag=disable_tag)

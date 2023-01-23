@@ -5,3 +5,4 @@ fasttext
 mwparserfromhell
 python-dotenv
 scp
+beautifulsoup4

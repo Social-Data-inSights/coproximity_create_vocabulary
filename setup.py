@@ -9,6 +9,6 @@ setup(
       author_email='matthieu.devaux@alumni.epfl.ch',
       license='MIT',
       packages=['coproximity_create_vocabulary'],
-      install_requires=['flask', 'spacy', 'requests', 'fasttext', 'mwparserfromhell', 'python-dotenv', 'scp'],
+      install_requires=['flask', 'spacy', 'requests', 'fasttext', 'mwparserfromhell', 'python-dotenv', 'scp', 'beautifulsoup4'],
       zip_safe=False
 )

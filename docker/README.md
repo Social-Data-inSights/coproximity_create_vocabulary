@@ -22,6 +22,10 @@ docker build -t vocab:fr --build-arg spacy_model=fr_core_news_lg --build-arg add
 ```
 
 ```
+docker build -t vocab:fr --build-arg spacy_model=fr_core_news_lg --build-arg additional_arg="-p fr -l french --disable_tag tagger_parser_ner --fasttext_model fr" --build-arg STOP_CACHE=(date +%s) .
+```
+
+```
 docker build -t vocab:en --build-arg spacy_model=en_core_web_lg --build-arg additional_arg="-p en -l english --disable_tag parser_ner --fasttext_model en" --no-cache .
 ```
 

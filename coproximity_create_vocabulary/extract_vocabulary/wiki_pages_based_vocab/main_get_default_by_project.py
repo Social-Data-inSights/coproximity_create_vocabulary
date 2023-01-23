@@ -1,6 +1,7 @@
 '''
 Get the french vocabulary and synonyms from the most viewed wikipedia pages and their redirections
 '''
+from coproximity_create_vocabulary.download_wikipedia.get_pages_views.wikipedia_date_handle import get_most_recent_date
 from coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.wiki_title import (
     factory_create_title_wiki, get_title_from_dump_factory, create_smaller_multi_synonyms_text_file
 )
@@ -46,8 +47,9 @@ def create_default_wikititle(
     synonyms_file = whole_folder + 'meta/synonyms.csv'
     processed_syn_file = get_processed_file(synonyms_file, spacy_model, disable_tag, 'csv')
 
-    plain_dump_file = whole_folder + f'/dumps/wiki_{project}_dump.xml.bz2'
-    plain_index_dump_file = whole_folder + f'/dumps/wiki_{project}_dump_index.xml.bz2'
+    most_recent_date = get_most_recent_date(project)
+    plain_dump_file = whole_folder + f'/dumps/wiki_{project}_dump-{most_recent_date}.xml.bz2'
+    plain_index_dump_file = whole_folder + f'/dumps/wiki_{project}_dump_index-{most_recent_date}.xml.bz2'
     temp_dump_file = whole_folder + f'/dumps/wiki_{project}_dump_temp.xml.bz2'
     func_get_text_from_title_factory = lambda : get_title_from_dump_factory(plain_index_dump_file, plain_dump_file, temp_dump_file)
 
@@ -128,7 +130,8 @@ def main_wiki_fr_create_smaller_multi_synonyms_text_file(project, language_folde
     vocab_folder = language_folder+'ngram_title_wiki/wiki_title_%s%s/'%('whole' if n_best_taken is None else 'best_%d'%n_best_taken, new_str)
     meta_folder = language_folder + 'meta/'
 
-    plain_dump_file = language_folder + f'/dumps/wiki_{project}_dump.xml.bz2'
+    most_recent_date = get_most_recent_date(project)
+    plain_dump_file = language_folder + f'/dumps/wiki_{project}_dump-{most_recent_date}.xml.bz2'
     plain_index_dump_file = language_folder + f'/dumps/wiki_{project}_dump_index.xml.bz2'
     temp_dump_file = language_folder + f'/dumps/wiki_{project}_dump_temp.xml.bz2'
     func_get_text_from_title_factory = lambda : get_title_from_dump_factory(plain_index_dump_file, plain_dump_file, temp_dump_file)

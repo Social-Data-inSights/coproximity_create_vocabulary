@@ -4,6 +4,8 @@ Download the redirects of Wikipedia articles and the id to title dictionary.
 redirects: https://dumps.wikimedia.org/{project}wiki/latest/{project}wiki-latest-redirect.sql.gz    
 
 pages : https://dumps.wikimedia.org/{project}wiki/latest/{project}wiki-latest-page.sql.gz
+
+TODOC: wiki_recent_date
 '''
 
 import os, gzip, json, csv
@@ -21,8 +23,11 @@ def get_id2title(project, page_file, id2title_file) :
     id2title_file: save file of the dictionary {wikipedia id: wikipedia title}
     page_file: save file of the SQL dump
     '''
-    download_page(page_file, url = f'https://dumps.wikimedia.org/{project}wiki/latest/{project}wiki-latest-page.sql.gz',)
-    
+    if os.path.exists(page_file):
+        print(f'{page_file} already downloaded')
+    else :
+        download_page(page_file, url = f'https://dumps.wikimedia.org/{project}wiki/latest/{project}wiki-latest-page.sql.gz',)
+
     #{project}wiki-latest-page.sql.gz is a SQL table, but it is faster to directly parse it by reading which values were supposed to be inserted.
     id2title = {}
     with gzip.open(page_file)as f  :
@@ -53,7 +58,10 @@ def get_synonyms(project, id2title, redirect_file, synonym_file) :
     redirect_file: save file of the SQL dump
     synonym_file: csv file in which to save the resulting synonyms
     '''
-    download_page(redirect_file, url = f'https://dumps.wikimedia.org/{project}wiki/latest/{project}wiki-latest-redirect.sql.gz',)
+    if os.path.exists(redirect_file):
+        print(f'{redirect_file} already downloaded')
+    else :
+        download_page(redirect_file, url = f'https://dumps.wikimedia.org/{project}wiki/latest/{project}wiki-latest-redirect.sql.gz',)
 
     #{project}wiki-latest-redirect.sql.gz is a SQL table, but it is faster to directly parse it by reading which values were supposed to be inserted.
     redirect = {}
@@ -71,7 +79,7 @@ def get_synonyms(project, id2title, redirect_file, synonym_file) :
         for from_word, to_word in redirect.items() :
             writer.writerow((from_word, to_word))
 
-def main_download_synonyms(project, language_folder, save_parent_folder=base_vocab_folder) :
+def main_download_synonyms(project, language_folder, wiki_recent_date, save_parent_folder=base_vocab_folder) :
     '''
     For a project {project} download the redirects of Wikipedia articles and the id to title dictionary.
     
@@ -80,8 +88,8 @@ def main_download_synonyms(project, language_folder, save_parent_folder=base_voc
     '''
     vocab_folder = save_parent_folder + language_folder + '/'
     dump_folder = vocab_folder + 'dumps/'
-    page_file = dump_folder + f'{project}wiki-latest-page.sql.gz'
-    redirect_file = dump_folder + f'{project}wiki-latest-redirect.sql.gz'
+    page_file = dump_folder + f'{project}wiki-page-{wiki_recent_date}.sql.gz'
+    redirect_file = dump_folder + f'{project}wiki-latest-redirect-{wiki_recent_date}.sql.gz'
 
     extent_list = dump_folder.split('/')
     folder_to_create = ''
