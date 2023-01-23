@@ -132,7 +132,7 @@ def main_wiki_fr_create_smaller_multi_synonyms_text_file(project, language_folde
 
     most_recent_date = get_most_recent_date(project)
     plain_dump_file = language_folder + f'/dumps/wiki_{project}_dump-{most_recent_date}.xml.bz2'
-    plain_index_dump_file = language_folder + f'/dumps/wiki_{project}_dump_index.xml.bz2'
+    plain_index_dump_file = language_folder + f'/dumps/wiki_{project}_dump_index-{most_recent_date}.xml.bz2'
     temp_dump_file = language_folder + f'/dumps/wiki_{project}_dump_temp.xml.bz2'
     func_get_text_from_title_factory = lambda : get_title_from_dump_factory(plain_index_dump_file, plain_dump_file, temp_dump_file)
 
