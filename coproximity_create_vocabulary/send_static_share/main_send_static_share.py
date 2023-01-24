@@ -26,11 +26,11 @@ def main_send_static_share(project, language_name, fasttext_model, save_parent_f
     disable_tag: fasttext model to use to create word2vec vectors from articles during the vocabulary creation. If None, try to get a default value from 
         coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.get_args.var_getter_by_project using project as a key
     '''
-    main_generate_vocab(project, language_name, fasttext_model=fasttext_model, save_parent_folder=save_parent_folder, spacy_model=spacy_model, disable_tag=disable_tag)
+    #main_generate_vocab(project, language_name, fasttext_model=fasttext_model, save_parent_folder=save_parent_folder, spacy_model=spacy_model, disable_tag=disable_tag)
     
     language_folder = save_parent_folder + language_name +'/'
     to_send_folder = f'/home/debian/cs.prod/static_share/voc/{project}/'
-    zip_vocab(language_folder)
+    #zip_vocab(language_folder)
     send_to_server(language_folder, to_send_folder)
 
 if __name__ == '__main__' :

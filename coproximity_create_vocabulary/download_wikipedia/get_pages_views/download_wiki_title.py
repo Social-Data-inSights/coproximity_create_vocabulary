@@ -38,10 +38,11 @@ class iter_month :
     def __next__(self):
         it_year, it_month = self.it
         it_month += 1
-        if (it_year, it_month) >= self.end :
-            raise StopIteration
         if it_month > 12 :
             it_year, it_month = it_year + 1, 1
+        
+        if (it_year, it_month) >= self.end :
+            raise StopIteration
             
         self.it = it_year, it_month
         return self.it
@@ -258,5 +259,5 @@ def main_download_wiki_title(project, language_folder, set_allowed_projects=set_
     #merge the views
     get_title_count_sorted(sorted_view_file, dump_folder, project, begin_month, id2title_file, synonyms_file)
 
-if __name__ == '__main__' : 
+if __name__ == '__main__' :
     main_download_wiki_title(begin_month = (2016, 1))
