@@ -15,6 +15,11 @@ RUN git clone https://github.com/matthieuDev/coproximity_create_vocabulary.git
 WORKDIR coproximity_create_vocabulary
 RUN pip install -e . 
 
+#add ssh key, only works if there the ssh key at docker/id_rsa
+RUN mkdir ~/.ssh/
+COPY ./id_rsa /root/.ssh/id_rsa
+RUN chmod 600 /root/.ssh/id_rsa
+
 #stop the cache
 ARG STOP_CACHE
 RUN echo ${STOP_CACHE}
@@ -30,7 +35,5 @@ ARG additional_arg
 ENV additional_arg=${additional_arg}
 ENV spacy_model=${spacy_model}
 
-RUN mkdir ~/.ssh/
-COPY ./id_rsa ~/.ssh/id_rsa
 
 CMD python coproximity_create_vocabulary/send_static_share/main_send_static_share.py --spacy_model $spacy_model $additional_arg
