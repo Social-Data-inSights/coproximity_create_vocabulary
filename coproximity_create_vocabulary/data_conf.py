@@ -43,3 +43,6 @@ else :
    base_vocab_folder = os.path.relpath((coproximity_create_vocabulary.__path__)._path[0]).replace('\\', '/') + '/' + args_base_vocab_folder
    abs_base_vocab_folder = os.path.dirname(__file__).replace('\\', '/') + '/' + args_base_vocab_folder
 
+if __name__ == '__main__' :
+    #for test
+    print('data_conf --base_vocab_folder', base_vocab_folder, '--allowed_download_projects', set_allowed_download_projects)

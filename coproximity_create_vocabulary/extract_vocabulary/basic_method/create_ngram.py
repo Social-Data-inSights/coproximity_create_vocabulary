@@ -144,7 +144,10 @@ def create_ngram_framework (
         if syn_to
     }
 
-    save_all([('synonyms.json' , synonyms)], vocab_folder)
+    save_all([
+        ('synonyms.json' , synonyms),
+        ('main_dict_vocab.json' , main_dict_vocab),    
+    ], vocab_folder)
 
     if is_printing_progress :
         print('INFO_PRINT:simplify main_dict_vocab:end', flush=True)
