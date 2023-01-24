@@ -5,7 +5,8 @@
 
 build/
 vocabulary/
-docker/log.txt
+docker/log*.txt
+docker/id_rsa
 coproximity_create_vocabulary/data_conf.py
 coproximity_create_vocabulary.egg-info/
 coproximity_create_vocabulary/.env
