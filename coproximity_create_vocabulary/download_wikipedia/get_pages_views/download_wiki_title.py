@@ -94,6 +94,7 @@ def reduce_size_dump(save_filename, reduced_save_filename, set_allowed_projects)
     reduced_save_filename: save the reduced-size pageview dump from path
     '''
     if os.path.exists(reduced_save_filename) :
+        print(reduced_save_filename, 'already done')
         return
 
     already_project = set()
@@ -258,6 +259,7 @@ def main_download_wiki_title(project, language_folder, set_allowed_projects=set_
 
     #merge the views
     get_title_count_sorted(sorted_view_file, dump_folder, project, begin_month, id2title_file, synonyms_file)
+    print('end main_download_wiki_title')
 
 if __name__ == '__main__' :
     main_download_wiki_title(begin_month = (2016, 1))

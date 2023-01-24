@@ -50,6 +50,8 @@ def main_downloader_wiki(project, language_folder, save_parent_folder=base_vocab
         use_multiprocessing=True,
     )
     delete_old_date(wiki_most_recent_date, save_parent_folder + language_folder + '/dumps/')
+
+    print('download wiki dumps end')
     
     
 
