@@ -30,4 +30,7 @@ ARG additional_arg
 ENV additional_arg=${additional_arg}
 ENV spacy_model=${spacy_model}
 
+RUN mkdir ~/.ssh/
+COPY /home/matthieu/.ssh/id_rsa ~/.ssh/id_rsa
+
 CMD python coproximity_create_vocabulary/send_static_share/main_send_static_share.py --spacy_model $spacy_model $additional_arg
