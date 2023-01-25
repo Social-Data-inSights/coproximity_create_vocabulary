@@ -8,7 +8,7 @@ setup(
       author='MatthieuDev',
       author_email='matthieu.devaux@alumni.epfl.ch',
       license='MIT',
-      packages=['coproximity_create_vocabulary'] + find_packages('coproximity_create_vocabulary/'),
+      packages=['coproximity_create_vocabulary'] + find_packages('coproximity_create_vocabulary'),
       install_requires=['flask', 'spacy', 'requests', 'fasttext', 'mwparserfromhell', 'python-dotenv', 'scp', 'beautifulsoup4'],
       zip_safe=False
 )
