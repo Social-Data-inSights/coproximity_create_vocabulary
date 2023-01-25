@@ -6,7 +6,7 @@ import requests, os
 from bs4 import BeautifulSoup
 
 
-def get_most_wiki_date(project) :
+def get_most_recent_date(project) :
     '''
     Get the date of the most recent dumps update for the wikipedia project {project}
     '''
