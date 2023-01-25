@@ -1,4 +1,14 @@
+import os
 from setuptools import setup, find_packages
+
+def recursive_get_sub_packages(path):
+    res = []
+    for folder in os.listdir(path):
+        rec_path = f'{path}{folder}/'
+        if os.path.isdir(rec_path) and folder != '__pycache__' and not folder.startswith('.') :
+            res.append(rec_path.replace('/', '.').strip('.'))
+            res.extend(recursive_get_sub_packages(rec_path))
+    return res
 
 setup(
       name='coproximity_create_vocabulary',
@@ -8,7 +18,7 @@ setup(
       author='MatthieuDev',
       author_email='matthieu.devaux@alumni.epfl.ch',
       license='MIT',
-      packages=['coproximity_create_vocabulary'] + find_packages('coproximity_create_vocabulary'),
+      packages=['coproximity_create_vocabulary'] + recursive_get_sub_packages('coproximity_create_vocabulary/'),
       install_requires=['flask', 'spacy', 'requests', 'fasttext', 'mwparserfromhell', 'python-dotenv', 'scp', 'beautifulsoup4'],
       zip_safe=False
 )
