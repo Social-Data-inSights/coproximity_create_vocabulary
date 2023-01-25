@@ -112,7 +112,6 @@ Note: {...} are variable set in the code, the ... is the name of the variable. I
 
 ## Docker 
 
-TODOC
-TODOC dockerfile_send_data
+A Docker version (i.e. a version where all the pipeline takes place in a Docker) of the creation of the vocabularies is available if the docker folder. It is more described here.
 
-TODOC compascience static share 
+It also contains the main pipeline (in docker format) to generate and send the vocabularies to the static share.

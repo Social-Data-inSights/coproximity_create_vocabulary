@@ -63,6 +63,10 @@ docker run --rm -v "E:/UNIL/backend/data/test_vocab_new_package/vocabulary/":/vm
 
 To do the build and run to create the vocabulary and send to the compascience static share. (default vocabulary easily accessible)
 
+For the data to be sent to the static share, you need to have a file ./id_rsa with a working "OPENSSH PRIVATE KEY". If you don't the vocabularies will be created, but it will not be sent.
+
+WARNING: if you want to use this but don't have a working private key, please create an empty id_rsa file for the builder not to crash.
+
 ```
 nohup ./junipero_update_vocab_and_send.sh > log.txt &
 ```
