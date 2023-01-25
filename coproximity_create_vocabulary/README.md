@@ -53,6 +53,6 @@ Folder containing everything to download and handle dumps
 
 Contains everything to generate the vocabularies from the results of download_wikipedia, and handle them afterwards
 
-### static_share
+### send_static_share
 
-TODOC
+Access the server containing the statistically shared data. It has scripts to send and load the default vocabulary and data needed to create your own vocabulary from scratch.

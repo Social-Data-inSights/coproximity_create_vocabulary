@@ -24,3 +24,7 @@ Create 2 csv:
     - a list of redirection from a redirection to the main page it redirects to
 
 It also downloads the article dumps of Wikipedia to be used to get a text to create a vector representing articles using word2vec.
+
+### wikipedia_date_handle.py
+
+Scripts about the date of the latest version of Wikipedia

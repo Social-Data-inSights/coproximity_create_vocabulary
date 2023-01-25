@@ -24,7 +24,7 @@ def main_downloader_wiki(project, language_folder, save_parent_folder=base_vocab
     language_folder: name of the language to extract, will be used as the name of the language folder. 
     save_parent_folder: parent folder in which all the vocabulary files/folder will be saved/created (vocabulary base folder)
     '''
-
+    #date of the latest dumps for this project
     wiki_most_recent_date = get_most_recent_date(project)
 
     print('start main_downloader_wiki')

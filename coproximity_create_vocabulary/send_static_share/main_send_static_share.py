@@ -1,6 +1,7 @@
 '''
 Creates the main vocabularies from scratch: download the dumps, extract only the main articles, sort them by pageviews, get the redirections 
 and create the main vocabularies from them. And then zip the meta folder (in which the synonyms and lexicon are saved, with their precessed version) 
+and main vocabulary (vocabulary with a lexicon of size 1e5, with uppercase and accents)
 and send them to the static_share server.
 
 use the command line arguments from the coproximity_create_vocabulary.main_generate_vocab parser

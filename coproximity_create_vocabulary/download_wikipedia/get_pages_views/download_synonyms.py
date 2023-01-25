@@ -4,8 +4,6 @@ Download the redirects of Wikipedia articles and the id to title dictionary.
 redirects: https://dumps.wikimedia.org/{project}wiki/latest/{project}wiki-latest-redirect.sql.gz    
 
 pages : https://dumps.wikimedia.org/{project}wiki/latest/{project}wiki-latest-page.sql.gz
-
-TODOC: wiki_recent_date
 '''
 
 import os, gzip, json, csv
@@ -84,6 +82,8 @@ def main_download_synonyms(project, language_folder, wiki_recent_date, save_pare
     For a project {project} download the redirects of Wikipedia articles and the id to title dictionary.
     
     language_folder: name of the language to extract, will be used as the name of the language folder. 
+    wiki_recent_date: date of the latest wikipedia dumps. Used to know which version of the dumps we have (and if we need to update it or not)
+        (use get_most_recent_date)
     save_parent_folder: parent folder in which all the vocabulary files/folder will be saved/created (vocabulary base folder)
     '''
     vocab_folder = save_parent_folder + language_folder + '/'

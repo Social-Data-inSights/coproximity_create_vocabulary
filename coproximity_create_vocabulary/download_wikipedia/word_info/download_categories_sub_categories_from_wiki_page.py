@@ -29,7 +29,7 @@ def download_recursive_categories (wiki_page_name, depth, max_depth, already_don
     print(wiki_page_name)
     
     cat_html = requests.get(url_base%wiki_page_name).json()['categorytree']['html']
-    cat_soup = BeautifulSoup(cat_html, 'html.parser') 
+    cat_soup = BeautifulSoup(cat_html, features='html.parser') 
     
     res = []
     for div in cat_soup.find_all('div', { 'class': 'CategoryTreeItem' }) :

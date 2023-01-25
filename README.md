@@ -114,3 +114,5 @@ Note: {...} are variable set in the code, the ... is the name of the variable. I
 
 TODOC
 TODOC dockerfile_send_data
+
+TODOC compascience static share 
