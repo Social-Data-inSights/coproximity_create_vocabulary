@@ -1,5 +1,7 @@
 # wikipedia_downloader
 
+TODOC : \__main__.py
+
 Allows to easily download the dumps of Wikipedia for pageviews and redirections. Use them to create a vocabulary as a list of tokens with synonyms. The main aim of this repository is to create a vocabulary from Wikipedia to be used for https://github.com/matthieuDev/Projet_AdE-IMI to extract keywords from texts.  
 
 Also allows to download the Wikipedia articles dumps and extract the plain article from them.
@@ -39,6 +41,10 @@ Warning: to avoid re downloading all the page views at each new Wikipedia projec
 Path: coproximity_create_vocabulary/download_wikipedia/create_wikipedia_plain/update_wikipedia_dataset.py
 
 Download the article Wikipedia dump, parse them, and get the best views from them.
+
+### main_send_static_share.py
+
+TODOC
 
 ## repository variables
 
@@ -108,7 +114,7 @@ This module will create a path structure in the base folder (set in the .env), h
 |&emsp;|\
 
 
-Note: {...} are variable set in the code, the ... is the name of the variable. If there is non {} around something, it is hard coded
+Note: {...} are variable set in the code, the ... is the name of the variable. If there is no {} around something, it is hard coded
 
 ## Docker 
 

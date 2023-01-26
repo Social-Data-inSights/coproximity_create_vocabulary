@@ -45,7 +45,7 @@ def get_check_only (get_only_ids, get_only_title, id_, title) :
     Given  {get_only_ids}, {get_only_title} a set of articles to keep or nothing if we need to keep everything, 
     return the boolean "is the article ok", the updated sets (we delete the articles if we find them in the sets) and a boolean "should we stop" (if sets were given and it is now empty) 
     '''
-    if get_only_ids is None and get_only_ids is None:
+    if get_only_ids is None and get_only_title is None:
         return True, None, None, False
     if get_only_ids :
         if id_ in get_only_ids :
