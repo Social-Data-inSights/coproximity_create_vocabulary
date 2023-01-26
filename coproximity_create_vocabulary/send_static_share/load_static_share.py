@@ -5,15 +5,19 @@ Load the main zip for compascience's static share
 from coproximity_create_vocabulary.extract_vocabulary.basic_method.util_vocab import download_page
 from coproximity_create_vocabulary.data_conf import base_vocab_folder
 
-import os, shutil
-from urllib.request import urlretrieve
+import os, shutil, requests
 
-def download_page_from_static_share(page_file, url ) :
+verify = os.path.dirname(os.path.realpath(__file__)) + '/compascience.crt'
+def download_page_from_static_share(page_file, url, verify=verify ) :
     '''
     alternative downloader because requests send ssh errors
     Download an internet page at {url} and save it in file {page_file}
     '''
-    urlretrieve(url, filename=page_file)
+    dump = requests.get(url, stream=True, verify = verify)
+    with open(page_file, 'wb') as f :
+        for chunk in dump.raw.stream(1024 * 1024 * 100, decode_content=False):
+            if chunk:
+                f.write(chunk)
 
 def download_and_unzip (load_url, save_zip_file, extracted_path):
     '''

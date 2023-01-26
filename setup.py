@@ -1,5 +1,5 @@
 import os
-from setuptools import setup, find_packages
+from setuptools import setup
 
 def recursive_get_sub_packages(path):
     res = []
@@ -20,5 +20,7 @@ setup(
       license='MIT',
       packages=['coproximity_create_vocabulary'] + recursive_get_sub_packages('coproximity_create_vocabulary/'),
       install_requires=['flask', 'spacy', 'requests', 'fasttext', 'mwparserfromhell', 'python-dotenv', 'scp', 'beautifulsoup4'],
-      zip_safe=False
+      zip_safe=False,
+      include_package_data=True,
+      package_data={'coproximity_create_vocabulary': ['**/*.json', '**/*.csv', '**/*.crt',  '**/*.md']},
 )
