@@ -5,7 +5,7 @@ Load the main zip for compascience's static share
 from coproximity_create_vocabulary.extract_vocabulary.basic_method.util_vocab import download_page
 from coproximity_create_vocabulary.data_conf import base_vocab_folder
 
-import os, shutil, requests
+import os, shutil, requests, textwrap
 
 verify = os.path.dirname(os.path.realpath(__file__)) + '/compascience.crt'
 def download_page_from_static_share(page_file, url, verify=verify ) :
@@ -81,9 +81,29 @@ def download_needed_to_create_vocab (language_folder, project_server, date = 'la
             
     download_and_unzip (load_url, save_zip_file, save_folder)
 
+def download_wiki_plain(project, nb_keep, data_folder, date = 'latest'):
+    plain_base = f"best_avg_{'.'.join(textwrap.wrap(str(nb_keep)[::-1] , 3))[::-1]}"
+
+    load_url = f'https://www.compasciences.ch/datasets/wikipedia/{project}/{plain_base}-{date}.zip'
+    wiki_folder = f'{data_folder}/wikipedia_{project}/'
+    loaded_file = wiki_folder + plain_base + '.zip'
+    extracted_path = wiki_folder 
+    
+    for folder in [
+        base_vocab_folder,
+        wiki_folder,
+    ]:
+        if not os.path.exists(folder) :
+            os.mkdir(folder) 
+    download_and_unzip (load_url, loaded_file, extracted_path)
+
 if __name__ == '__main__' :
     language_folder = 'french'
     project_server = 'fr'
     
     download_main_vocab (language_folder, project_server, name_vocab_folder = 'test_main_vocab')
     download_needed_to_create_vocab (language_folder, project_server)
+
+    from ade_imi.data_conf import base_data_folder
+    download_wiki_plain(project_server, 100, base_data_folder, date = 'latest')
+
