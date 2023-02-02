@@ -35,13 +35,13 @@ def main_send_static_share(project, language_name, fasttext_model, save_parent_f
     main_generate_vocab(project, language_name, fasttext_model=fasttext_model, save_parent_folder=save_parent_folder, spacy_model=spacy_model, disable_tag=disable_tag)
     
     language_folder = save_parent_folder + language_name +'/'
-    to_send_folder = f'/home/debian/cs.prod/static_share/voc/{project}/'
+    to_send_folder = f'/home/debian/cs.dev/static_share/voc/{project}/'
     zip_vocab(language_folder)
     send_vocab_to_server(language_folder, to_send_folder)
 
     #send default wiki
     wiki_plain_folder = f'{base_vocab_folder}extracted_wikipedia/{language_name}/'
-    to_send_folder_wiki = f'/home/debian/cs.prod/static_share/datasets/wikipedia/{project}/'
+    to_send_folder_wiki = f'/home/debian/cs.dev/static_share/datasets/wikipedia/{project}/'
     extract_main_plains_from_vocabulary(language_name, project)
     zip_wiki_plains(wiki_plain_folder)
     send_wiki_plain_to_server(wiki_plain_folder, to_send_folder_wiki)
