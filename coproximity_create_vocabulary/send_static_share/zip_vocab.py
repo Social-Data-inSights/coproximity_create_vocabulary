@@ -14,7 +14,7 @@ def zip_vocab(language_folder):
 
 def zip_wiki_plains(wiki_plain_folder):
     for from_local_file in os.listdir(wiki_plain_folder) :
-        if from_local_file.startswith('best_avg_'):
+        if from_local_file.startswith('best_avg_') and not from_local_file.endswith('.zip'):
             *filename_base, _ = from_local_file.split('.')
             filename_base = '.'.join(filename_base)
 
