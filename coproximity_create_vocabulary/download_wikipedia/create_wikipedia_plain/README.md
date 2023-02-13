@@ -8,6 +8,9 @@ Download the dump from wikipedia and create from it a json files containing all 
 
 create the information files for the wikipedia dataset: the title and what to add to the url to get the page (which is also the title).
 
+### extract_main_plains_from_vocabulary.py
+
+Extract the main Wikipedia plain files from the static_share dump.
 
 ### split_articles_to_csv.py
 

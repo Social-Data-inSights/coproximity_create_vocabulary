@@ -1,7 +1,5 @@
 # wikipedia_downloader
 
-TODOC : \__main__.py
-
 Allows to easily download the dumps of Wikipedia for pageviews and redirections. Use them to create a vocabulary as a list of tokens with synonyms. The main aim of this repository is to create a vocabulary from Wikipedia to be used for https://github.com/matthieuDev/Projet_AdE-IMI to extract keywords from texts.  
 
 Also allows to download the Wikipedia articles dumps and extract the plain article from them.
@@ -44,7 +42,19 @@ Download the article Wikipedia dump, parse them, and get the best views from the
 
 ### main_send_static_share.py
 
-TODOC
+Similar to main_generate_vocab.py but also create the Wikipedia plain files (file that can directly be given to the tf-idf extraction in ade_imi).
+
+Creates the main vocabularies from scratch: download the dumps, extract only the main articles, sort them by pageviews, get the redirections 
+and create the main vocabularies from them. And then zip the meta folder (in which the synonyms and lexicon are saved, with their precessed version) 
+and main vocabulary (vocabulary with a lexicon of size 1e5, with uppercase and accents)
+and send them to the static_share server.
+
+Also create Wikipedia plain files, zip the main one and send it to the static_share.
+
+use the command line arguments from the coproximity_create_vocabulary.main_generate_vocab parser
+
+example:  python main_send_static_share.py --project it --language_name italian --spacy_model it_core_news_lg --disable_tag parser_ner --fasttext_model fr
+
 
 ## repository variables
 
@@ -61,6 +71,9 @@ Example :
 
 python generate_env.py --base_vocab_folder E:/UNIL/backend/data/whole/vocabulary/ --allowed_download_projects en_de_it_fr
 
+This can be done alternatively using the main whcih would be :
+
+python -m coproximity_create_vocabulary env --base_vocab_folder E:/UNIL/backend/data/whole/vocabulary/ --allowed_download_projects en_de_it_fr
 
 ## Vocabulary creation structure
 

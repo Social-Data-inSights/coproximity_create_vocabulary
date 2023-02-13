@@ -15,7 +15,6 @@ def download_page_from_static_share(page_file, url, verify=verify ) :
 
     WARNING : need a valid .crt, if the current one is missing or not available, download all the .crt of https://www.compasciences.ch/ and
     merge them into 1 .crt
-    TODOC autre part 
     '''
     dump = requests.get(url, stream=True, verify = verify)
     with open(page_file, 'wb') as f :

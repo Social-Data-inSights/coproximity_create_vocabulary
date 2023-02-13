@@ -1,10 +1,10 @@
 '''
-TODOC send default wiki
-
 Creates the main vocabularies from scratch: download the dumps, extract only the main articles, sort them by pageviews, get the redirections 
 and create the main vocabularies from them. And then zip the meta folder (in which the synonyms and lexicon are saved, with their precessed version) 
 and main vocabulary (vocabulary with a lexicon of size 1e5, with uppercase and accents)
 and send them to the static_share server.
+
+Also create Wikipedia plain files, zip the main one and send it to the static_share.
 
 use the command line arguments from the coproximity_create_vocabulary.main_generate_vocab parser
 
@@ -21,7 +21,7 @@ from coproximity_create_vocabulary.download_wikipedia.create_wikipedia_plain.ext
 def main_send_static_share(project, language_name, fasttext_model, save_parent_folder=base_vocab_folder, spacy_model = None, disable_tag = None) :
     '''
     Creates the main vocabularies from scratch, zip the important part and send them to the static_share server.
-    TODOC send default wiki
+    Also create Wikipedia plain files, zip the main one and send it to the static_share.
 
     project: Wikipedia project from which to extract the data from. Will also be the name of the language folder in the server.
     language_name: name of the language folder, where all the data specific to this language will be stored

@@ -15,10 +15,10 @@ ssh_args_compascience = {
 
 def connect_ssh_compascience(ssh_args=ssh_args_compascience):
     '''
-    TODOC
+    Connect to the ssl of compascience
+
+    require a valid ssl towards compascience
     '''
-    #connect to ssl
-    #require a valid ssl towards compascience
     ssh_connect = paramiko.SSHClient()
     ssh_connect.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh_connect.connect(**ssh_args)
@@ -26,7 +26,7 @@ def connect_ssh_compascience(ssh_args=ssh_args_compascience):
 
 def server_create_folder_if_missing(ssh_connect, to_send_folder):
     '''
-    TODOC
+    Given an ssh connection and a folder path, create the folder if it is missing in the server
     '''
     #create folder on the server if they're missing
     for folder in [to_send_folder] :
@@ -68,7 +68,7 @@ def send_vocab_to_server(language_folder, to_send_folder, ssh_args=ssh_args_comp
 
 def send_wiki_plain_to_server(wiki_plain_folder, to_send_folder, ssh_args=ssh_args_compascience) :
     '''
-    TODOC
+    Given a folder containing the plain wikipedia folder {wiki_plain_folder} and a path {to_send_folder} to send them in a server, upload the main Wikipedia plain dump on the server.
     
     ssh_args: arguments to give to the paramiko.SSHClient
     '''

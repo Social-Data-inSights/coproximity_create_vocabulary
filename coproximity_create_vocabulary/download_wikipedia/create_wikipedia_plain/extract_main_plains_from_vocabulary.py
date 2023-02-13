@@ -1,5 +1,5 @@
 '''
-TODOC
+Extract the main Wikipedia plain files from the static_share dump.
 '''
 from coproximity_create_vocabulary.data_conf import base_vocab_folder
 from coproximity_create_vocabulary.download_wikipedia.get_pages_views.wikipedia_date_handle import get_most_recent_date
@@ -10,7 +10,7 @@ import csv, os
 
 def get_best_titles(language, nb_words) :
     '''
-    TODOC
+    For a given language {language}, get from this language folder's list of best Wikipedia articles, the {nb_words} most viewed article titles 
     '''
     sorted_article_list_file = f'{base_vocab_folder}{language}/meta/sorted_view_wiki_over_years.csv'
 
@@ -31,7 +31,7 @@ def get_best_titles(language, nb_words) :
 
 def extract_main_plains_from_vocabulary(language, wiki_project) :
     '''
-    TODOC
+    For a given language {language} an its associated project {wiki_project}, extract the main Wikipedia plain files (best 1'000'000, best 250'000 and best 100 (for test)) 
     '''
     wiki_most_recent_date = get_most_recent_date(wiki_project)
     dump_file = f'{base_vocab_folder}{language}/dumps/wiki_{wiki_project}_dump-{wiki_most_recent_date}.xml.bz2'
