@@ -2,6 +2,7 @@
 **/.ipynb_checkpoints
 **/for_ogier_doc2doc/
 **/TODOC.txt
+**/*.crt
 
 build/
 vocabulary/

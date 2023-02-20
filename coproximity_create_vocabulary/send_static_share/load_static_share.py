@@ -5,9 +5,38 @@ Load the main zip for compascience's static share
 from coproximity_create_vocabulary.extract_vocabulary.basic_method.util_vocab import download_page
 from coproximity_create_vocabulary.data_conf import base_vocab_folder
 
-import os, shutil, requests, textwrap
+import os, shutil, requests, textwrap, ssl, socket, base64
 
 verify = os.path.dirname(os.path.realpath(__file__)) + '/compascience.crt'
+
+def crt_format(cont):
+    '''
+    get a byte string .crt content and format it to be in a certificate format
+    '''
+    res = cont[:64]
+    for i in range(64, len(cont), 64) :
+        res = f'{res}\n{cont[i:i+64]}'
+    return f'-----BEGIN CERTIFICATE-----\n{res}\n-----END CERTIFICATE-----\n'
+def redownload_certificate():
+    '''
+    Re download the .crt to access the static_share
+    '''
+    compa_crt = ssl.get_server_certificate(('www.compasciences.ch', '443'))
+
+    hostname = 'www.compasciences.ch'
+    ctx = ssl.create_default_context()
+    with ctx.wrap_socket(socket.socket(), server_hostname=hostname) as s:
+        s.connect((hostname, 443))
+        cert = s.getpeercert()
+        
+    crts = [compa_crt]
+    for crt_url in cert['caIssuers'] + ('http://crt.sectigo.com/USERTrustRSACertificationAuthority.crt',) :
+        crt_content = crt_format((base64.b64encode(requests.get(crt_url)._content)).decode('ascii'))
+        crts.append(crt_content)
+
+    with open(verify, 'w') as f :
+        f.write('\n'.join(crts))
+
 def download_page_from_static_share(page_file, url, verify=verify ) :
     '''
     alternative downloader because requests send ssh errors
@@ -16,11 +45,14 @@ def download_page_from_static_share(page_file, url, verify=verify ) :
     WARNING : need a valid .crt, if the current one is missing or not available, download all the .crt of https://www.compasciences.ch/ and
     merge them into 1 .crt
     '''
+    redownload_certificate()
     dump = requests.get(url, stream=True, verify = verify)
     with open(page_file, 'wb') as f :
         for chunk in dump.raw.stream(1024 * 1024 * 100, decode_content=False):
             if chunk:
                 f.write(chunk)
+
+
 
 def download_and_unzip (load_url, save_zip_file, extracted_path):
     '''
