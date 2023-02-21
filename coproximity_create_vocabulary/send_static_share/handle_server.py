@@ -1,7 +1,7 @@
 '''
 Send data to the static share
 
-Warning: requires a valid ssl towards compascience in the .ssl
+Warning: requires a valid ssl towards compascience in the .ssh
 '''
 
 from scp import SCPClient

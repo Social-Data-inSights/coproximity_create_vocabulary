@@ -18,12 +18,13 @@ def main_generate_vocab(project, language_folder, fasttext_model, save_parent_fo
 
     project: Wikipedia project from which to extract the data from
     language_folder: name of the language folder, where all the data specific to this language will be stored
-    fasttext_model: spacy model used to lemmatize the titles during the vocabulary creation
+    fasttext_model:     fasttext model to use to create word2vec vectors from articles during the vocabulary creation. If None, try to get a default value from 
+        coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.get_args.var_getter_by_project using project as a key
     save_parent_folder: vocabulary base folder, folder in which all the vocabulary will be saved 
     spacy_model: tags to disable in the spacy model (to speed it up) during the vocabulary creation. If None, try to get a default value from 
         coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.get_args.var_getter_by_project using project as a key
-    disable_tag: fasttext model to use to create word2vec vectors from articles during the vocabulary creation. If None, try to get a default value from 
-        coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.get_args.var_getter_by_project using project as a key
+    disable_tag: tags to disable in the spacy model (to speed it up) during the vocabulary creation.If None, try to get a default value from 
+        coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.get_args.var_getter_by_project using project as a key 
     '''
     main_downloader_wiki(project, language_folder)
     main_default_wikititle(spacy_model, disable_tag, fasttext_model, project, print_progress_info=False, whole_folder = save_parent_folder + language_folder + '/')
@@ -40,7 +41,7 @@ vocab_parser.add_argument(
     help = 'tags to disable in the spacy model (to speed it up) during the vocabulary creation.If None, try to get a default value from coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.get_args.var_getter_by_project using project as a key'
 
 )
-vocab_parser.add_argument('--fasttext_model', default=None,  help = 'fasttext model to use to create word2vec vectors from articles during the vocabulary creation')
+vocab_parser.add_argument('--fasttext_model', default=None,  help = 'fasttext model to use to create word2vec vectors from articles during the vocabulary creation. If None, try to get a default value from coproximity_create_vocabulary.extract_vocabulary.wiki_pages_based_vocab.get_args.var_getter_by_project using project as a key')
 
 
 if __name__ == '__main__' :
