@@ -23,14 +23,8 @@ def redownload_certificate():
     '''
     compa_crt = ssl.get_server_certificate(('www.compasciences.ch', '443'))
 
-    hostname = 'www.compasciences.ch'
-    ctx = ssl.create_default_context()
-    with ctx.wrap_socket(socket.socket(), server_hostname=hostname) as s:
-        s.connect((hostname, 443))
-        cert = s.getpeercert()
-        
     crts = [compa_crt]
-    for crt_url in cert['caIssuers'] + ('http://crt.sectigo.com/USERTrustRSACertificationAuthority.crt',) :
+    for crt_url in  ('http://crt.sectigo.com/SectigoRSADomainValidationSecureServerCA.crt', 'http://crt.sectigo.com/USERTrustRSACertificationAuthority.crt',) :
         crt_content = crt_format((base64.b64encode(requests.get(crt_url)._content)).decode('ascii'))
         crts.append(crt_content)
 
