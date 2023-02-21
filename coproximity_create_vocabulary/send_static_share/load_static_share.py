@@ -1,5 +1,10 @@
 '''
 Load the main zip for compascience's static share
+
+If you have a ssl.SSLCertVerificationError exception, it means that the .crt does not work anymore. 
+If you change crt authority you can change the crt_url in redownload_certificate. Otherwise you can download all the certificate of the hierarchy and 
+replace compascience.crt.
+If one day we have a certificate that can be read easily, you can just replace download_page_from_static_share with download_page (with decode_content=False in the stream)
 '''
 
 from coproximity_create_vocabulary.extract_vocabulary.basic_method.util_vocab import download_page
@@ -39,8 +44,15 @@ def download_page_from_static_share(page_file, url, verify=verify ) :
     WARNING : need a valid .crt, if the current one is missing or not available, download all the .crt of https://www.compasciences.ch/ and
     merge them into 1 .crt
     '''
-    redownload_certificate()
-    dump = requests.get(url, stream=True, verify = verify)
+    if not os.path.exists(verify):
+        redownload_certificate()
+    
+    try:
+        dump = requests.get(url, stream=True, verify = verify)
+    except:
+        #if fail try to redownload the certificates
+        redownload_certificate()
+        dump = requests.get(url, stream=True, verify = verify)
     with open(page_file, 'wb') as f :
         for chunk in dump.raw.stream(1024 * 1024 * 100, decode_content=False):
             if chunk:
