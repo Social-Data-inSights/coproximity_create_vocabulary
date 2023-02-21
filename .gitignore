@@ -2,12 +2,12 @@
 **/.ipynb_checkpoints
 **/for_ogier_doc2doc/
 **/TODOC.txt
-**/*.crt
+
+*.crt
 
 build/
 vocabulary/
 docker/log*.txt
 docker/id_rsa
-coproximity_create_vocabulary/data_conf.py
 coproximity_create_vocabulary.egg-info/
 coproximity_create_vocabulary/.env
